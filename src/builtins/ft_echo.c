@@ -1,56 +1,46 @@
 #include "../../include/minishell.h"
 //이부분은 확실하게 파싱의 틀이 잡혀야지 진행이 가능하다.
 
-typedef enum echo_option 
+t_echo_option check_option(char *op)
 {
-    ECHO_NONE,
-    ECHO_N,
-}   t_echo_option;
-
-bool ft_isspace(int c)
-{
-    if (ft_strchr(" \f\n\r\t\v", c) != c)
-        return (true);
-    else
-        return (false);
-}
-
-static int check_option(char *op)
-{
-    int flag;
-    static int idx;
-
-    flag = ECHO_N;
-    while (op[idx] || ft_isspace(*op))
+    if (*op != '-')
+        return (E_NON);
+    op++;
+    while (*op)
     {
-        if (op[0] == '-')
-        {
-            idx++;
-            while (/* condition */)
-            {
-                /* code */
-            }
-        }
+        if (*op != 'n')
+            return (E_NON);
         op++;
     }
-    
+    return (E_OP);
 }
 
-void ft_echo(char *input) //input == echo -n 
+void ft_echo(char *input, t_con *test) //input == echo -n 
 {
-    char *cpy;
-    int op;
+    (void *)input;
+    t_node *current;
+    int flag = 0;
+    t_echo_option option;
 
-    cpy = input;
-    op = check_option(cpy);
-    if (op == ECHO_NONE)
-        printf("%s\n", cpy);
-    else if (op == ECHO_N)
-        printf("%s", cpy);
-}
-
-int main()
-{
-    ft_echo("-nnn Hello Wrold");
-    return (0);
+    test->head = test->head->next;//test용도 입니다.
+    current = test->head;
+    option = E_NON;
+    while (current)
+    {
+        if (!flag && check_option(current->val) == E_OP)
+            option = E_OP;
+        if (check_option(current->val) == E_NON)
+            break;
+        current = current->next;
+        flag++;
+    }
+    while (current)
+    {
+        printf ("%s", current->val);
+        if (current->next != NULL)
+                printf (" ");
+        current = current->next;
+    }
+    if (option == E_NON)
+        printf ("\n");
 }

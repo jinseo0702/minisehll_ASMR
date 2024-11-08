@@ -9,7 +9,16 @@ src/mns/control_node.c \
 src/mns/init_env.c \
 src/builtins/ft_env.c \
 src/builtins/ft_unset.c \
-src/prompt/prompt.c
+src/builtins/ft_cd.c \
+src/builtins/ft_pwd.c \
+src/builtins/ft_export.c \
+src/builtins/ft_exit.c \
+src/builtins/splitcmd.c \
+src/builtins/ft_echo.c \
+src/builtins/ft_check_builtins.c \
+src/prompt/prompt.c \
+src/excute/excute.c \
+src/excute/is_access.c 
 
 OBJS = $(SRC:.c=.o)
 NAME = minishell

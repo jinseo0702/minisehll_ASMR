@@ -2,45 +2,47 @@
 
 t_built_type check_builtins(const char *command)
 {
-    if (ft_strncmp("echo", command, 4) && ft_strlen(command) == 4)
+    if (!ft_strncmp("echo", command, 4) && ft_strlen(command) == 4)
         return (BUILT_ECHO);
-    else if (ft_strncmp("cd", command, 2) && ft_strlen(command) == 2)
+    else if (!ft_strncmp("cd", command, 2) && ft_strlen(command) == 2)
         return (BUILT_CD);
-    else if (ft_strncmp("pwd", command, 3) && ft_strlen(command) == 3)
+    else if (!ft_strncmp("pwd", command, 3) && ft_strlen(command) == 3)
         return (BUILT_PWD);
-    else if (ft_strncmp("export", command, 6) && ft_strlen(command) == 6)
+    else if (!ft_strncmp("export", command, 6) && ft_strlen(command) == 6)
         return (BUILT_EXPORT);
-    else if (ft_strncmp("unset", command, 5) && ft_strlen(command) == 5)
+    else if (!ft_strncmp("unset", command, 5) && ft_strlen(command) == 5)
         return (BUILT_UNSET);
-    else if (ft_strncmp("env", command, 3) && ft_strlen(command) == 3)
+    else if (!ft_strncmp("env", command, 3) && ft_strlen(command) == 3)
         return (BUILT_ENV);
-    else if (ft_strncmp("exit", command, 4) && ft_strlen(command) == 4)
+    else if (!ft_strncmp("exit", command, 4) && ft_strlen(command) == 4)
         return (BUILT_EXIT);
     else
         return (BUILT_NOT);
 }
 
-void excute_cmd(t_con *env, t_built_type cmd, char *input)
+void excute_cmd(t_con *env, t_built_type cmd, char *input, t_con *test)
 {
     if (cmd == BUILT_ECHO)
-        return ;
+        return ft_echo(input, test);
     else if (cmd == BUILT_CD)
-        return ;
+        ft_cd(input, test);
     else if (cmd == BUILT_PWD)
         ft_pwd();
     else if (cmd == BUILT_EXPORT)
-        ft_export(env, input);
+        ft_export(env, input, test);
     else if (cmd == BUILT_UNSET)
-        ft_unset(env, input);
+        ft_unset(env, input, test);
     else if (cmd == BUILT_ENV)
         ft_env(env);
     else if (cmd == BUILT_EXIT)
-        return ;
+        return (ft_exit(input));
     else if (cmd == BUILT_NOT)
-        printf ("What is this ??? \n");
+        return(exe_cmd(env, test));
 }
 
 void control_cmd(t_con *env, const char *command, char *input)
 {
-    excute_cmd(env, check_builtins(command), input);
+    t_con *test = miniparse(input);
+    (void *)command;
+    excute_cmd(env, check_builtins(test->head->val), input, test);
 }
