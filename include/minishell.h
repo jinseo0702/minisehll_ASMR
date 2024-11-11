@@ -16,6 +16,7 @@
 # include "../libft/libft.h"
 # include "../libft/gnl_check_bonus/get_next_line.h"
 # include "../libft/gnl_check_bonus/get_next_line_bonus.h"
+#include "./minishell_parsing.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdlib.h>
@@ -127,9 +128,8 @@ t_con *miniparse(char *input);
 //excute
 void free_two(char **two);
 char *return_path(t_con *env, char *cmd);
-int proc_fork(char **env, char **cmd, char *path);
+void proc_fork(char **env, char **cmd, char *path);
 void exe_cmd(t_con *env, t_con *test);
 char **merge_option(t_con *env);//option 리스트로 교체할 예정 입니다.
-int proc_fork(char **env, char **cmd, char *path);
 //---------------------------------------------
 # endif

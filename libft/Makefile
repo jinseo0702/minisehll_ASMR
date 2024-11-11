@@ -1,4 +1,4 @@
-CC = cc
+CC = clang
 CFLAG = -Wall -Wextra -Werror -g
 AR = ar -rcs
 RM = rm -rf
@@ -38,6 +38,8 @@ SRCS = ft_isalnum.c \
 	ft_putnbr_fd.c \
 	ft_strmapi.c \
 	ft_striteri.c \
+	ft_isspace.c \
+	ft_strndup.c \
 	gnl_check_bonus/get_next_line.c \
 	gnl_check_bonus/get_next_line_utils.c \
 	gnl_check_bonus/get_next_line_bonus.c \

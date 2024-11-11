@@ -55,12 +55,12 @@ void exe_cmd(t_con *env, t_con *test)
     free(path);
 }
 
-int proc_fork(char **env, char **cmd, char *path)
+void proc_fork(char **env, char **cmd, char *path)
 {
     int pid;
 
     pid = fork();
-    waitpid(pid, 0, WNOHANG);
+    waitpid(pid, 0, 0);
     if (pid == -1)
         exit(1);//error입니다.
     if (pid == 0)
@@ -71,4 +71,9 @@ int proc_fork(char **env, char **cmd, char *path)
             exit(1);
         }
     }
+    else
+    {
+        printf("Hello World\n");
+    }
+        return ;
 }

@@ -1,4 +1,4 @@
-CC = cc
+CC = clang
 #CFLAGS = -Wall -Wextra -Werror -g
 CFLAGS = -g
 RM = rm -rf
@@ -18,7 +18,10 @@ src/builtins/ft_echo.c \
 src/builtins/ft_check_builtins.c \
 src/prompt/prompt.c \
 src/excute/excute.c \
-src/excute/is_access.c 
+src/excute/is_access.c \
+src/parser/ft_util.c \
+src/parser/parsing.c \
+
 
 OBJS = $(SRC:.c=.o)
 NAME = minishell
