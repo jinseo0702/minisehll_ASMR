@@ -22,6 +22,7 @@ void prompt(t_con *env)
             exit (1);//에러처리는 고민해야 하는 부분입니다.
         }
         free_commands(cmd_lst);
+        cmd_lst = NULL;
         free(input);
         input = NULL;
     }

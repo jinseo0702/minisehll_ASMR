@@ -6,10 +6,10 @@ void ft_free(char **tokens) {
 
     size_t i = 0;
     while (tokens[i]) {
-        free(tokens[i]);
+        ft_freenull(tokens[i]);
         i++;
     }
-    free(tokens);
+    ft_freenull(tokens);
 }
 
 t_option *new_option(char *data) {
@@ -40,26 +40,29 @@ t_arg *new_arg(char *filename, char *variable, char *arg) {
     else
         argument->type = T_OPTION;
 
-    return argument;
+    return (argument);
 }
 
-t_pipe *new_command() {
-    t_pipe *command = (t_pipe *)malloc(sizeof(t_pipe));
-    if (!command)
-        return NULL;
+t_pipe *new_command()
+{
+    t_pipe *command;
 
+    command = (t_pipe *)malloc(sizeof(t_pipe));
+    if (!command)
+        return (NULL);
     command->type = T_PIPE;
     command->cmd = (t_cmd *)malloc(sizeof(t_cmd));
-    if (!command->cmd) {
+    if (!command->cmd)
+    {
         free(command);
-        return NULL;
+        command = NULL;
+        return (NULL);
     }
-
     command->cmd->type = T_REDIRECTION;
     command->cmd->redirections = NULL;
     command->cmd->simple_cmd = NULL;
     command->next = NULL;
-    return command;
+    return (command);
 }
 
 void add_redirection(t_cmd *command, char *redirect, t_arg *arg) {
@@ -95,7 +98,8 @@ void add_simple_command(t_cmd *command, char *basic_command, t_arg *arg) {
     command->simple_cmd = new_simple_cmd;
 }
 
-void add_command(t_pipe **command_list, t_pipe *command) {
+void add_command(t_pipe **command_list, t_pipe *command)
+{
     t_pipe *temp;
 
     temp = *command_list;
@@ -135,27 +139,38 @@ void add_option(t_arg *arg, char *data) {
     }
 }
 
-void parse_and_store(char *input, t_pipe **command_list) {
+void parse_and_store(char *input, t_pipe **command_list)
+{
     char **commands = ft_split(input, '|');  // 파이프(|) 기준으로 명령어 구분
     size_t i = 0;
+    t_pipe *command;
+    char *normalized_command;
+    char **tokens;
+    char *token;
+    size_t j;
+    T_QUOTO_FLG double_flg;
+    T_QUOTO_FLG single_flg;
+    char *redirect;
+    char *filename;
+    T_RDT rdt_type;
+    t_arg *arg;
+    t_rdts *new_redirection;
 
     while (commands[i]) 
     {
-        t_pipe *command = new_command();
-        if (!command) break;
-
-        char *normalized_command = replace_whitespace(commands[i]);
-        char **tokens = ft_split(normalized_command, ' ');
+        command = new_command();
+        if (!command)
+            break;
+        normalized_command = replace_whitespace(commands[i]);
+        tokens = ft_split(normalized_command, ' ');
         free(normalized_command);
-
-        size_t j = 0;
+        j = 0;
         while (tokens[j]) 
         {
             // 따옴표 짝수/홀수 상태 확인
-            T_QUOTO_FLG double_flg = EVEN;
-            T_QUOTO_FLG single_flg = EVEN;
-            char *token = tokens[j];
-
+            double_flg = EVEN;
+            single_flg = EVEN;
+            token = tokens[j];
             // 토큰 내의 각 문자를 순회하면서 따옴표 개수 체크
             for (size_t k = 0; token[k] != '\0'; k++) 
             {
@@ -182,11 +197,7 @@ void parse_and_store(char *input, t_pipe **command_list) {
                 (ft_strncmp(token, ">>", 2) == 0) ||
                 (ft_strncmp(token, "<<", 2) == 0)) 
             {
-
-                char *redirect;
-                char *filename = NULL;
-                T_RDT rdt_type;
-
+                filename = NULL;
                 if (ft_strncmp(token, ">>", 2) == 0) 
                 {
                     redirect = ft_strndup(token, 2);
@@ -230,8 +241,8 @@ void parse_and_store(char *input, t_pipe **command_list) {
                     j++;
                 }
 
-                t_arg *arg = new_arg(filename, NULL, NULL);
-                t_rdts *new_redirection = (t_rdts *)malloc(sizeof(t_rdts));
+                arg = new_arg(filename, NULL, NULL);
+                new_redirection = (t_rdts *)malloc(sizeof(t_rdts));
                 if (!new_redirection) 
                 {
                     free(redirect);
@@ -253,7 +264,7 @@ void parse_and_store(char *input, t_pipe **command_list) {
             {
                 if (j == 0) 
                 {
-                    t_arg *arg = new_arg(NULL, NULL, NULL);
+                    arg = new_arg(NULL, NULL, NULL);
                     add_simple_command(command->cmd, tokens[j], arg);
                 }
                 else 

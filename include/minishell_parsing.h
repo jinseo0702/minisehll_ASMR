@@ -82,6 +82,7 @@ typedef struct s_option
 t_option *new_option(char *data);
 t_arg *new_arg(char *filename, char *variable, char *arg);
 t_pipe *new_command();
+void free_commands(t_pipe *command_list);
 void add_redirection(t_cmd *command, char *redirect, t_arg *arg);
 void add_simple_command(t_cmd *command, char *basic_command, t_arg *arg);
 void add_command(t_pipe **command_list, t_pipe *command);
