@@ -13,7 +13,7 @@ void free_two(char **two)
     free(two);
 }
 
-char *return_path(t_con *env, char *cmd)
+char *return_path(t_mi *mi, char *cmd)
 {
     char *path_real;
     char *path_real2;
@@ -21,7 +21,7 @@ char *return_path(t_con *env, char *cmd)
     int idx;
 
     idx = 0;
-    split = ft_split(ft_strchr(search_node(env, "PATH")->val, '/'), ':');
+    split = ft_split(ft_strchr(search_node(mi->env, "PATH")->val, '/'), ':');
     while (split[idx])
     {
         path_real = ft_strjoin(split[idx], "/");

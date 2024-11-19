@@ -1,33 +1,6 @@
 #ifndef TESTPARSING_H
 #define TESTPARSING_H
 
-typedef enum e_in_type
-{
-    T_PIPE,
-    T_REDIRECTION,
-    T_ARGV,
-    T_ENV,
-    T_NULL,
-}   t_in_type;
-
-typedef struct s_pan
-{
-    struct s_pan *next;
-    t_in_type type;
-    char *val;
-} t_pan;
-
-typedef struct s_pcon
-{
-    struct s_pan *head;
-    int size;
-} t_pcon;
-
-typedef enum e_clear_type
-{
-    LINKED_PCON,
-    LINKED_PAN
-} t_clear_type;
 
 void print_pcon(t_pcon *head);
 t_in_type check_type(char *val);
@@ -44,5 +17,6 @@ int is_special(char *s);
 int is_quotes(char c);
 int check_quotes(char *str);
 int check_another(char *str);
-t_pcon *pars(char *input);
+void cnt_pipe(t_mi *mi);
+void pars(t_mi *mi);
 #endif

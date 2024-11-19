@@ -15,12 +15,11 @@
     free(str);// 수정해야 합니다.
 }*/
 
-void ft_cd(const char *input, t_con *test)
+void ft_cd(char **two_cmd)
 {
-    test->head = test->head->next;
-    if (chdir(test->head->val) == -1)
+    if (chdir(two_cmd[1]) == -1)
     {
-        printf("%serror !!!! \n", test->head->val);
+        printf("%serror !!!! \n", two_cmd[1]);
         return ;
     }
 }

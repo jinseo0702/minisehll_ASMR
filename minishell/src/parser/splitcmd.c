@@ -55,6 +55,7 @@ void remove_pan(t_pcon *con, t_pan *target)//target_node를 삭제해줍니다.
     int idx2;
     t_pan *current;
 
+    // printf("size == %s \n", con->head->val);
     idx = re_index_pan(con, target);
     idx2 = 0;
     if (target == NULL)
@@ -72,6 +73,7 @@ void remove_pan(t_pcon *con, t_pan *target)//target_node를 삭제해줍니다.
     }
     ft_freenull(target->val);
     free(target);
+    target = NULL;
     con->size--;
 }
 
@@ -129,13 +131,13 @@ t_in_type check_type(char *val)
 {
     if (!ft_strncmp(val, "|", 1) && ft_strlen(val) == 1)
         return (T_PIPE);
-    else if (!ft_strncmp(val, "<", 1) && ft_strlen(val) == 1)
+    else if (!ft_strncmp(val, ">>", 2) && ft_strlen(val) == 2)
         return (T_REDIRECTION);
     else if (!ft_strncmp(val, "<<", 2) && ft_strlen(val) == 2)
         return (T_REDIRECTION);
-    else if (!ft_strncmp(val, ">", 1) && ft_strlen(val) == 1)
+    else if (!ft_strncmp(val, "<", 1) && ft_strlen(val) == 1)
         return (T_REDIRECTION);
-    else if (!ft_strncmp(val, ">>", 2) && ft_strlen(val) == 2)
+    else if (!ft_strncmp(val, ">", 1) && ft_strlen(val) == 1)
         return (T_REDIRECTION);
     else if (!ft_strncmp(val, "$", 1))
         return (T_ENV);
@@ -158,9 +160,11 @@ void print_pcon(t_pcon *head)
 
 // int main(void)
 // {
-//     char *input;
-//     input = readline(">? ");
-//     pars(input);
+//     t_mi mi;
+//     mi.input = readline(">? ");
+//     pars(&mi);
+//     free(mi.input);
+//     ft_free_pcon(mi.head);
 //     return (0);
 // }
 

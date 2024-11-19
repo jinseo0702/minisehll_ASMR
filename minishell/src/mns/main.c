@@ -7,6 +7,7 @@ void init_mi(t_mi *mi, char **envp)
     mi->input = NULL;
     mi->head = NULL;
     mi->file = 0;
+    mi->pcnt = 0;
     pipe(mi->fd);//error 처리 하자...
 }
 

@@ -8,7 +8,7 @@ void prompt(t_mi *mi)
         {
 			add_history(mi->input);
 			rl_redisplay();
-            control_cmd(mi, mi->env, mi->input, mi->input);
+            control_cmd(mi);
         }
         else
         {

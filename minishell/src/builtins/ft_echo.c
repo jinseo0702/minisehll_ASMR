@@ -15,31 +15,27 @@ t_echo_option check_option(char *op)
     return (E_OP);
 }
 
-void ft_echo(t_mi *mi, t_con *test) //input == echo -n 
+void ft_echo(t_mi *mi, char **two_cmd) //input == echo -n 
 {
-    (void *)mi;
-    t_node *current;
+    (void)mi;//$처리하기 아직 yet
+    int idx = 0;
     int flag = 0;
     t_echo_option option;
 
-    test->head = test->head->next;//test용도 입니다.
-    current = test->head;
     option = E_NON;
-    while (current)
+    while (two_cmd[++idx])
     {
-        if (!flag && check_option(current->val) == E_OP)
+        if (!flag && check_option(two_cmd[idx]) == E_OP)
             option = E_OP;
-        if (check_option(current->val) == E_NON)
+        if (check_option(two_cmd[idx]) == E_NON)
             break;
-        current = current->next;
         flag++;
     }
-    while (current)
+    while (two_cmd[idx])
     {
-        printf ("%s", current->val);
-        if (current->next != NULL)
-                printf (" ");
-        current = current->next;
+        printf ("%s", two_cmd[idx]);
+        printf (" ");
+        idx++;
     }
     if (option == E_NON)
         printf ("\n");

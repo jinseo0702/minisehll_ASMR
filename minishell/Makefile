@@ -13,13 +13,12 @@ src/builtins/ft_cd.c \
 src/builtins/ft_pwd.c \
 src/builtins/ft_export.c \
 src/builtins/ft_exit.c \
-src/builtins/splitcmd.c \
 src/builtins/ft_echo.c \
 src/builtins/ft_check_builtins.c \
-src/prompt/prompt.c \
+src/excute/about_file.c \
 src/excute/excute.c \
 src/excute/is_access.c \
-src/parser/ft_util.c \
+src/prompt/prompt.c \
 src/parser/split_pipe.c \
 src/parser/splitcmd.c \
 

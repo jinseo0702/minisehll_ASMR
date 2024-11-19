@@ -41,11 +41,22 @@ bool env_grammar(char *val)
     return (false);
 }
 
-void ft_export(t_mi *mi, t_con *test)
+size_t re_two_size(char **two)
+{
+    size_t siz;
+
+    siz = 0;
+    while (two[siz])
+        siz++;
+    return (siz);
+}
+
+void ft_export(t_mi *mi, char **two)//char **two_cmd
 {
     t_node *current;
+    int idx = 0;
     
-    if (test->size == 1)
+    if (re_two_size(two) == 1)
     {
         current = mi->export->head;
         while (current)
@@ -55,17 +66,14 @@ void ft_export(t_mi *mi, t_con *test)
         }
         return ;
     }
-    test->head = test->head->next;
-    current = test->head;
-    while (current)
+    while (two[++idx])
     {
-        if (env_grammar(current->val))
+        if (env_grammar(two[idx]))
         {
-            insert_node(mi->env, new_node(current->val), INSERT_TAIL);
-            insert_node(mi->export, new_node(current->val), INSERT_TAIL);
+            insert_node(mi->env, new_node(ft_strdup(two[idx])), INSERT_TAIL);
+            insert_node(mi->export, new_node(ft_strdup(two[idx])), INSERT_TAIL);
         }
         else
-            insert_node(mi->export, new_node(current->val), INSERT_TAIL);
-        current = current->next;
+            insert_node(mi->export, new_node(ft_strdup(two[idx])), INSERT_TAIL);
     }
 }

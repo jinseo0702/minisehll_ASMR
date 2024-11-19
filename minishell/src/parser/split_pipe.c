@@ -4,7 +4,7 @@ int is_special(char *s)
 {
     if (!ft_strncmp(s, "<<", 2) || !ft_strncmp(s, ">>", 2))
         return (2);
-    else if (!ft_strncmp(s, "<", 1) || !ft_strncmp(s, "<", 1) || !ft_strncmp(s, "|", 1))
+    else if (!ft_strncmp(s, "<", 1) || !ft_strncmp(s, ">", 1) || !ft_strncmp(s, "|", 1))
         return (1);
     else
         return (0);
@@ -55,37 +55,51 @@ int check_another(char *str)
     return(idx);    
 }
 
-t_pcon *pars(char *input)
+void cnt_pipe(t_mi *mi)
 {
-    t_pcon *head = malloc(sizeof(t_pcon));
-    init_pcon_pan(head, NULL, LINKED_PCON);
+    t_pan *current;
+
+    current = mi->head->head;
+    while (current)
+    {
+        if (current->type == T_PIPE)
+            mi->pcnt++;
+        current = current->next;
+    }
+}
+
+void pars(t_mi *mi)
+{
+    mi->head = malloc(sizeof(t_pcon));
+    init_pcon_pan(mi->head, NULL, LINKED_PCON);
     int idx;
     int end;
 
     idx = 0;
-    while (input[idx])
+    while (mi->input[idx])
     {
         end = 0;
-        if (ft_isspace(input[idx]))
+        if (ft_isspace(mi->input[idx]))
         {
             idx++;
             continue;
         }
-        else if (is_quotes(input[idx]))
+        else if (is_quotes(mi->input[idx]))
         {
-           end = check_quotes(&input[idx]);
+           end = check_quotes(&mi->input[idx]);
            if (end == -1)
             break;
         }
-        else if (is_special(&input[idx]))
-            end += is_special(&input[idx]);
+        else if (is_special(&mi->input[idx]))
+            end += is_special(&mi->input[idx]);
         else
         {
-            end += check_another(&input[idx]);
+            end += check_another(&mi->input[idx]);
         }
-        insert_pan(head, new_pan(ft_substr(input, idx, end)));
+        insert_pan(mi->head, new_pan(ft_substr(mi->input, idx, end)));
         idx += end;
     }
-    print_pcon(head);
-    return(head);
+    cnt_pipe(mi);
+    // print_pcon(mi->head);
+    // printf("cnt is = %d \n", mi->pcnt);
 }

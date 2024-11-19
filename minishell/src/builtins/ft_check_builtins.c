@@ -20,28 +20,28 @@ t_built_type check_builtins(const char *command)
         return (BUILT_NOT);
 }
 
-void excute_cmd(t_mi *mi, t_con *env, t_built_type cmd, char *input, t_con *test)
+void excute_cmd(t_mi *mi, t_built_type cmd, char **two_cmd)
 {
     if (cmd == BUILT_ECHO)
-        return ft_echo(mi, test);
+        ft_echo(mi, two_cmd);
     else if (cmd == BUILT_CD)
-        ft_cd(input, test);
+        ft_cd(two_cmd);
     else if (cmd == BUILT_PWD)
         ft_pwd();
     else if (cmd == BUILT_EXPORT)
-        ft_export(mi, test);
+        ft_export(mi, two_cmd);
     else if (cmd == BUILT_UNSET)
-        ft_unset(env, input, test);
+        ft_unset(mi, two_cmd);
     else if (cmd == BUILT_ENV)
         ft_env(mi);
     else if (cmd == BUILT_EXIT)
-        return (ft_exit(input));
-    else if (cmd == BUILT_NOT)
-        return(exe_cmd(env, test));
+        ft_exit(mi, two_cmd);
+    else if (cmd != BUILT_NOT)
+        exit(0);
 }
 
 void control_cmd(t_mi *mi)
 {
-    mi->head = pars(mi->input);
-    excute_cmd(mi, env, check_builtins(test->head->val), input, test);
+    pars(mi);
+    proc_fork(mi);
 }
