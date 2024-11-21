@@ -17,5 +17,7 @@ void prompt(t_mi *mi)
         }
         ft_freenull(mi->input);
         ft_free_pcon(mi->head);
+		mi->pcnt = 0;
+		mi->file = 0;
     }
 }
