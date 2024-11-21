@@ -3,7 +3,6 @@
 void find_redi(t_mi *mi)
 {
     t_pan *current;
-    int cnt = 0;
 
     current = mi->head->head;
     while (current && current->type != T_PIPE)
@@ -46,7 +45,6 @@ void check_redi(t_mi *mi, t_pan *node)
     temp = node->next;
     remove_pan(mi->head, node);
     remove_pan(mi->head, temp);
-    // print_pcon(mi->head);
     if (change_file_fd(mi, re) == -1)
     {
         printf("error 처리 하기!!!\n");

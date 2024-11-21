@@ -23,21 +23,21 @@ t_built_type check_builtins(const char *command)
 void excute_cmd(t_mi *mi, t_built_type cmd, char **two_cmd)
 {
     if (cmd == BUILT_ECHO)
-        ft_echo(mi, two_cmd);
+        ft_echo(two_cmd);
     else if (cmd == BUILT_CD)
         ft_cd(two_cmd);
     else if (cmd == BUILT_PWD)
-        ft_pwd();
+        ft_pwd(two_cmd);    //여기도 옵션 처리를 위해 매개변수에 two_cmd를 넣었습니다.
     else if (cmd == BUILT_EXPORT)
         ft_export(mi, two_cmd);
     else if (cmd == BUILT_UNSET)
         ft_unset(mi, two_cmd);
     else if (cmd == BUILT_ENV)
-        ft_env(mi);
+        ft_env(mi, two_cmd);    //옵션 처리를 해야할거 같아서 two_cmd를 넣었습니다.
     else if (cmd == BUILT_EXIT)
         ft_exit(mi, two_cmd);
     else if (cmd != BUILT_NOT)
-        exit(0);
+        return ;
 }
 
 void control_cmd(t_mi *mi)

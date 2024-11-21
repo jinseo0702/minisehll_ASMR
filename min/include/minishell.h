@@ -54,7 +54,7 @@ t_node *new_node(char *val);
 // void init_env(t_con *env, char **envp);
 t_con *init_env(char **envp);
 //ft_env.c
-void ft_env(t_mi *mi);//ft_env.c
+void ft_env(t_mi *mi, char **two_cmd);//ft_env.c
 bool env_grammar(char *val);//ft_env.c
 //control_node.c
 void insert_node(t_con *env, t_node *new, t_insert_type type);
@@ -82,7 +82,7 @@ t_built_type check_builtins(const char *command);
 // void excute_cmd(t_con *env, t_built_type cmd, char *input);
 void excute_cmd(t_mi *mi, t_built_type cmd, char **two_cmd);
 void control_cmd(t_mi *mi);
-void ft_pwd(void);//ft_pwd.c
+void ft_pwd(char **two_cmd);//ft_pwd.c
 // void ft_cd(const char *input);//ft_cd.c
 void ft_cd(char **two_cmd);
 void ft_exit(t_mi *mi, char **two_cmd);//ft_exit.c
@@ -93,7 +93,7 @@ typedef enum echo_option
     E_NON,//nonopion
     E_OP,//have option
 }   t_echo_option;
-void ft_echo(t_mi *mi, char **two_cmd);
+void ft_echo(char **two_cmd); // input == echo -n
 t_echo_option check_option(char *op);
 //***********
 
@@ -112,6 +112,8 @@ void proc_fork_2(t_mi *mi, int rf);
 void free_two(char **two);
 char *return_path(t_mi *mi, char *cmd);
 void printf_two(char **str);
+int check_fork(t_mi *mi);
+int not_fork(t_mi *mi);
 // int open_file(char *file, T_RDT re);
 //---------------------------------------------
 # endif

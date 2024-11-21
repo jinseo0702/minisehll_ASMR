@@ -8,7 +8,7 @@ void init_mi(t_mi *mi, char **envp)
     mi->head = NULL;
     mi->file = 0;
     mi->pcnt = 0;
-    pipe(mi->fd);//error 처리 하자...
+    ft_bzero(mi->fd, 2);//error 처리 하자...
 }
 
 int main(int argc, char **argv, char **envp)
