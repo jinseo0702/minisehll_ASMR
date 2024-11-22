@@ -171,9 +171,25 @@ void proc_fork(t_mi *mi)
     }
     else
     {
-        waitpid(pid, 0, 0);
+        int status;
+        waitpid(pid, &status, 0);
         printf("Hello World\n");//MASTER
     }
+}
+
+void delete_node(t_mi *mi)
+{
+    t_pan *current;
+
+    current = mi->head->head;
+    while (current && current->type != T_PIPE)
+    {
+        remove_pan(mi->head, current);
+        current = mi->head->head;
+    }
+    if (current->type == T_PIPE)
+        remove_pan(mi->head, current);
+    return ;
 }
 
 void proc_fork_2(t_mi *mi, int rf)
@@ -190,9 +206,11 @@ void proc_fork_2(t_mi *mi, int rf)
         exit(1);//error입니다.
     if (pid == 0)
     {
+        close(mi->fd[1]);
         if (dup2(mi->fd[0], 0) == -1)
                 return ;//error 처리를 해야한다
             close(mi->fd[0]);//
+        delete_node(mi);
         proc_fork_2(mi, rf + 1);
     }
     else
@@ -206,7 +224,7 @@ void proc_fork_2(t_mi *mi, int rf)
             //close(mi->fd[0]);//
             close(mi->fd[1]);//
         }
-        if (mi->pcnt > 0 && rf == 0)//처음일 때는 안쓰는 pipe중 입력을 닫아줘야 합니다.
+        if (mi->pcnt > 0)//처음일 때는 안쓰는 pipe중 입력을 닫아줘야 합니다.
             close(mi->fd[0]);
         if (mi->pcnt > 0 && rf == mi->pcnt)//마지막인경우 사용안하는 pipe중 출력을 닫아 줘야합니다.
             close(mi->fd[1]);
@@ -214,5 +232,4 @@ void proc_fork_2(t_mi *mi, int rf)
     }
     exit(pid);
 }
-
 
