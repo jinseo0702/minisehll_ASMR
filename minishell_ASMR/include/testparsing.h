@@ -18,5 +18,5 @@ int is_quotes(char c);
 int check_quotes(char *str);
 int check_another(char *str);
 void cnt_pipe(t_mi *mi);
-void pars(t_mi *mi);
+int pars(t_mi *mi);
 #endif

@@ -23,6 +23,7 @@ src/prompt/heredoc.c \
 src/parser/split_pipe.c \
 src/parser/splitcmd.c \
 src/parser/re_env.c \
+src/error/error.c \
 
 
 OBJS = $(SRC:.c=.o)

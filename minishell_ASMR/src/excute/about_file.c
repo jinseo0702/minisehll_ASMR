@@ -11,8 +11,10 @@ void find_redi(t_mi *mi)
         {
             check_redi(mi, current);
             current = mi->head->head;
+            continue;
         }
-        current = current->next;
+        if (current)
+            current = current->next;
     }
     return ;
 }
@@ -26,6 +28,12 @@ int change_file_fd(t_mi *mi, T_RDT re)
     else if(re == T_LESS)
         fd = dup2(mi->file, STDIN_FILENO);
     close(mi->file);
+    if (fd == -1)
+    {
+        if (mi->dup == 1)
+            exit(1);
+        perror("dup error!!");
+    }
     return(fd);
 }
 
@@ -37,7 +45,12 @@ void check_redi(t_mi *mi, t_pan *node)
     if (!ft_strncmp(">>", node->val, 2))
         mi->file = open_file(node->next->val, (re = T_DGREAT));
     else if (!ft_strncmp("<<", node->val, 2))
+    {
+        // re = T_DLESS;
+        // if (play_heredoc(node->next->val))
+        //     return ;
         mi->file = open_file(node->next->val, (re = T_DLESS));
+    }
     else if (!ft_strncmp("<", node->val, 1))
         mi->file = open_file(node->next->val, (re = T_LESS));
     else if (!ft_strncmp(">", node->val, 1))
@@ -45,10 +58,13 @@ void check_redi(t_mi *mi, t_pan *node)
     temp = node->next;
     remove_pan(mi->head, node);
     remove_pan(mi->head, temp);
-    if (change_file_fd(mi, re) == -1)
+    if (mi ->file == -1)
     {
-        printf("error 처리 하기!!!\n");
+        if (mi->dup == 1)
+            exit(1);
+        return ;
     }
+    change_file_fd(mi, re);
 }
 
 int open_file(char *file, T_RDT re)
@@ -62,6 +78,6 @@ int open_file(char *file, T_RDT re)
     else if (re == T_DGREAT)
         fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
     if (fd == -1)
-        printf("error !!\n");
+        perror(file);
     return (fd);
 }

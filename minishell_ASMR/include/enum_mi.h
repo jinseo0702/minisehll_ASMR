@@ -64,4 +64,13 @@ typedef enum e_quote_type
     QUOTE_NONE
 } t_quote_type;
 //---------------------------------------------
+
+//---------------------------------------------
+typedef enum e_synerr_type
+{
+    QUOTE_ERROR = -100,
+    SPECIAL_ERROR,
+    REDIREC_ERROR
+} t_syerror_type;
+//---------------------------------------------
 #endif

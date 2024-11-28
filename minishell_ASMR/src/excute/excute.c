@@ -63,9 +63,11 @@ void exe_cmd(t_mi *mi)
     char *path;
 
     find_redi(mi);
+    if (mi->head->size == 0)
+        return ;
     two_env = merge_env(mi);
     two_cmd = merge_option(mi);
-    path = return_path(mi, two_cmd[0]);
+    path = return_path(mi, &two_cmd[0]);
     if (!ft_strncmp(path, "", 1))
     {
         free_two(two_env);
@@ -78,12 +80,13 @@ void exe_cmd(t_mi *mi)
     {
         if (!real_execute(two_env, two_cmd, path))
         {
-            perror(two_cmd[0]);
+            ft_putstr_fd(two_cmd[0], 2);
+            ft_putendl_fd(" command not found", 2);
             free_two(two_env);
             free_two(two_cmd);
             free(path);//추후 에러는 상의하자.
             // printf("ERORR\n");//에러처리 어케 할래??
-            exit(1);//이상한 명령어가 들어오면 종료를 합니다.
+            exit(errno);//이상한 명령어가 들어오면 종료를 합니다.
         }
     }
     free_two(two_env);
@@ -135,6 +138,8 @@ int check_fork(t_mi *mi)
             break;
         }
     }
+    if (!current)
+        return (1);
     if (check_builtins(current->val) == BUILT_NOT)
         return (0);
     return (1);
@@ -186,6 +191,7 @@ void proc_fork(t_mi *mi)
         {//MASTER
             if (mi->pcnt > 0)
                 check_pipe(mi, rf);
+            mi->dup = 1;
             exe_cmd(mi);
             exit(1);
         }
@@ -198,7 +204,12 @@ void proc_fork(t_mi *mi)
     }
     int status;
     while (waitpid(-1, &status, 0) > 0)
-        ;
+    {
+        if (WIFEXITED(status))
+            mi->exit_status = WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
+            mi->exit_status = 128 + WTERMSIG(status);
+    }
 }
 
 void check_mpipe(t_mi *mi, int rf)
@@ -223,8 +234,8 @@ void check_mpipe(t_mi *mi, int rf)
 
 void check_pipe(t_mi *mi, int rf)
 {
-    int err_i;
-    int err_o;
+    int err_i = 0;
+    int err_o = 0;
 
     if (rf == 0)//처음일때
         err_o = dup2(mi->fd[1], STDOUT_FILENO);

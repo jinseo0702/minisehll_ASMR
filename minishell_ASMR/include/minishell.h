@@ -109,7 +109,7 @@ char *real_execute(char **env, char **cmd, char *path);
 int check_size(t_mi *mi);
 void proc_fork(t_mi *mi);
 void free_two(char **two);
-char *return_path(t_mi *mi, char *cmd);
+char *return_path(t_mi *mi, char **cmd);
 void printf_two(char **str);
 int check_fork(t_mi *mi);
 int not_fork(t_mi *mi);
@@ -151,5 +151,13 @@ char    *str_plus_chr(char *str, char c);
 char    *str_plus_str(char *str, char *str2);
 char *heredoc_readline(char *limiter);
 int lay_out_heredoc(char *val, char **limiter);
+//---------------------------------------------
+
+//---------------------------------------------
+//error
+void quotes_syntax_error(void);
+void re_syntax_error(char *s);
+void another_syntax_error(char *str);
+int check_error_case(t_mi *mi);
 //---------------------------------------------
 # endif

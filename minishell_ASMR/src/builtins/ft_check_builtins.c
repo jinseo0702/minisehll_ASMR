@@ -42,8 +42,11 @@ void excute_cmd(t_mi *mi, t_built_type cmd, char **two_cmd)
 
 void control_cmd(t_mi *mi)
 {
-    pars(mi);
+    if (pars(mi) < 0)
+        return ;
     if (mi->head->size == 0)
+        return ;
+    if (check_error_case(mi) < 0)
         return ;
     check_env(mi);
     print_pcon(mi->head);

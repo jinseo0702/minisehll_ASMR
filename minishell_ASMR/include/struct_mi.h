@@ -26,6 +26,8 @@ typedef struct s_mi
     struct s_pcon *head;
     int fd[2];
     int temp_fd;
+    int exit_status;
+    int dup;
 } t_mi;
 //-----------------------------------------------------------------
 

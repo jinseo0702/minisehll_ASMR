@@ -8,8 +8,10 @@ void init_mi(t_mi *mi, char **envp)
     mi->head = NULL;
     mi->file = 0;
     mi->pcnt = 0;
+    mi->exit_status = 0;
     ft_bzero(mi->fd, 2);//error 처리 하자...
     mi->temp_fd = 0;
+    mi->dup = 0;
 }
 
 int main(int argc, char **argv, char **envp)

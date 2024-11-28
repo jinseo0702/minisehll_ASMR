@@ -126,12 +126,20 @@ char *split_env(char *str, t_mi *mi)
     while (str[idx])
     {
         end = 0;
-        if (is_env(str[idx]))
+        if (!ft_strncmp(&str[idx], "$?", 2))
+        {
+            end = 2;
+            temp_env = ft_itoa(mi->exit_status);
+        }
+        else if (is_env(str[idx]))
         {
            end = env_len(&str[idx]);
            if (end == -1)
             break;
-            temp_env = s_env(ft_substr(str, idx, end), mi);//여기서는 $를가진뭔가가 온다.
+            if (end > 1)
+                temp_env = s_env(ft_substr(str, idx, end), mi);//여기서는 $를가진뭔가가 온다.
+            else
+                temp_env = ft_substr(str, idx, end);
         }
         else
         {

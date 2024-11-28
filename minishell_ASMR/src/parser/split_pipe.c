@@ -2,7 +2,12 @@
 
 int is_special(char *s)
 {
-    if (!ft_strncmp(s, "<<", 2) || !ft_strncmp(s, ">>", 2))
+    if (!ft_strncmp(s, "<<<", 3) || !ft_strncmp(s, ">>>", 3) || !ft_strncmp(s, "||", 2))
+    {
+        re_syntax_error(s);
+        return (-100);
+    }
+    else if (!ft_strncmp(s, "<<", 2) || !ft_strncmp(s, ">>", 2))
         return (2);
     else if (!ft_strncmp(s, "<", 1) || !ft_strncmp(s, ">", 1) || !ft_strncmp(s, "|", 1))
         return (1);
@@ -30,20 +35,25 @@ int check_quotes(char *str)
         if (str[idx] == q_type)
             return (++idx);
     }
-    return (-1);//따옴추가 
+    quotes_syntax_error();
+    return (-100);//따옴추가 
 }
 
 int check_another(char *str)
 {
     int idx;
+    int flag;
 
     idx = 0;
     while (str[idx] && !ft_isspace(str[idx]) && !is_special(&str[idx]))
     {
+        flag = 0;
         if (is_quotes(str[idx]))
         {
-            idx += check_quotes(&str[idx]);
-            // return(idx);
+            flag = check_quotes(&str[idx]);
+            if (flag < 0)
+                return (flag);
+            idx += flag;
         }
         else
         {
@@ -66,18 +76,20 @@ void cnt_pipe(t_mi *mi)
     }
 }
 
-void pars(t_mi *mi)
+int pars(t_mi *mi)
 {
     mi->head = malloc(sizeof(t_pcon));
     init_pcon_pan(mi->head, NULL, LINKED_PCON);
     int idx;
     int middle;
     int end;
+    int flag;
 
     idx = 0;
     while (mi->input[idx])
     {
         end = 0;
+        flag = 0;
         if (ft_isspace(mi->input[idx]))
         {
             idx++;
@@ -85,22 +97,31 @@ void pars(t_mi *mi)
         }
         else if (is_quotes(mi->input[idx]))
         {
-           end = check_quotes(&mi->input[idx]);
-           if (end == -1)
+           flag = check_quotes(&mi->input[idx]);
+           if (flag < 0)
             break;
+            end += flag;
+            flag = 0;
            middle = end + idx;
-           end += check_another(&mi->input[middle]);
+           flag += check_another(&mi->input[middle]);
+        //    if (flag < 0)
+        //     break;
+        //     end += flag;
         }
-        else if (is_special(&mi->input[idx]))
-            end += is_special(&mi->input[idx]);
+        else if ((flag += is_special(&mi->input[idx])))
+            ;
         else
         {
-            end += check_another(&mi->input[idx]);
+            flag += check_another(&mi->input[idx]);
         }
+        if (flag < 0)
+            break;
+        end += flag;
         insert_pan(mi->head, new_pan(ft_substr(mi->input, idx, end)));
         idx += end;
     }
     cnt_pipe(mi);
+    return (flag);
     // print_pcon(mi->head);
     // printf("cnt is = %d \n", mi->pcnt);
 }
