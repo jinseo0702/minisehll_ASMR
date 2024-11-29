@@ -75,7 +75,6 @@ void read_get_next(t_pan *current, char *str, int pcnt, int tcnt)
     char *temp;
     int file_fd;
 
-    signal(SIGINT, signal_ctlc_heredoc);
     file_fd = open_temp_file(current, pcnt, tcnt);
     // dup2_std_i(file_fd);
     while (1)

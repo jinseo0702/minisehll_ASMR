@@ -197,10 +197,12 @@ void proc_fork(t_mi *mi)
     {
         rf++;
         if (mi->pcnt > 0 && rf < mi->pcnt)
-            {
-                if(pipe(mi->fd) == -1)
-                    exit(1);//error처리하기.
-            }
+        {
+            if(pipe(mi->fd) == -1)
+                exit(1);//error처리하기.
+        }
+        signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
         mi->pid = fork();
         if (mi->pid == -1)
             exit(1);//error입니다.
@@ -217,19 +219,29 @@ void proc_fork(t_mi *mi)
         }
         else
         {
+            signal(SIGINT, SIG_IGN);
+            signal(SIGQUIT, SIG_IGN);
             if (mi->pcnt > 0 && rf < mi->pcnt)
                 delete_node(mi);
             check_mpipe(mi, rf);
         }
     }
     int status;
+    int signo = 0;
     while (waitpid(-1, &status, 0) > 0)
     {
         if (WIFEXITED(status))
             mi->exit_status = WEXITSTATUS(status);
         else if (WIFSIGNALED(status))
+        {
             mi->exit_status = 128 + WTERMSIG(status);
+            signo = mi->exit_status - 128;
+        }
     }
+    if (signo == SIGINT)
+        printf("^C\n");
+    if (signo == SIGQUIT)
+        printf("^Quit (core dumped)\n");
 }
 
 void check_mpipe(t_mi *mi, int rf)
