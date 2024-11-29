@@ -147,12 +147,14 @@ void signal_handler(int signo);
 void signal_init(void);
 //---------------------------------------------
 //heredoc
-int    play_heredoc(char *val);
+int    play_heredoc(t_pan *current, int pcnt, int tcnt);
 void	signal_ctlc_heredoc(int sig);
 char    *str_plus_chr(char *str, char c);
 char    *str_plus_str(char *str, char *str2);
-char *heredoc_readline(char *limiter);
-int lay_out_heredoc(char *val, char **limiter);
+void read_get_next(t_pan *current, char *str, int pcnt, int tcnt);
+int dup2_std_i(int file_fd);
+int open_temp_file(t_pan *current, int pcnt, int tcnt);
+void check_heredoc(t_pcon *head);
 //---------------------------------------------
 
 //---------------------------------------------

@@ -25,7 +25,7 @@ int change_file_fd(t_mi *mi, T_RDT re)
 
     if (re == T_DGREAT || re == T_GREAT)
         fd = dup2(mi->file, STDOUT_FILENO);
-    else if(re == T_LESS)
+    else if(re == T_LESS || re == T_DLESS)
         fd = dup2(mi->file, STDIN_FILENO);
     close(mi->file);
     if (fd == -1)
@@ -46,10 +46,8 @@ void check_redi(t_mi *mi, t_pan *node)
         mi->file = open_file(node->next->val, (re = T_DGREAT));
     else if (!ft_strncmp("<<", node->val, 2))
     {
-        re = T_DLESS;
-        if (play_heredoc(node->next->val))
-            return ;
-        // mi->file = open_file(node->next->val, (re = T_DLESS));
+        mi->file = open_file(node->next->val, (re = T_DLESS));
+        unlink(node->next->val);
     }
     else if (!ft_strncmp("<", node->val, 1))
         mi->file = open_file(node->next->val, (re = T_LESS));
@@ -77,6 +75,8 @@ int open_file(char *file, T_RDT re)
         fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     else if (re == T_DGREAT)
         fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+    else if (re == T_DLESS)
+        fd = open(file, O_RDONLY, 0644);
     if (fd == -1)
         perror(file);
     return (fd);

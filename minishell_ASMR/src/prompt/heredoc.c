@@ -1,123 +1,120 @@
 #include "../../include/minishell.h"
 
-char    *str_plus_chr(char *str, char c)
-{
-    char    *buf;
-    int     i;
-
-    if (!str)
-        return (0);
-        buf = malloc(sizeof (char) * ft_strlen(str) + 2);
-        if (buf)
-        {
-            i = 0;
-            while (str[i++])
-                buf[i] = str[i];
-            buf[i] = c;
-            buf[i + 1] = '\0';
-        }
-        free(str);
-        return (buf);
-}
-
-char    *str_plus_str(char *str, char *str2)
-{
-    char    *buf;
-
-    buf = str;
-    str = ft_strjoin(str, str2);
-    free(buf);
-    return (str);
-}
-
-char *heredoc_readline(char *limiter)
-{
-    char    *now_str;
-    char    *return_str;
-
-    signal(SIGINT, signal_ctlc_heredoc);
-    return_str = malloc(1);
-    if (!return_str)
-        return (0);
-    now_str = readline("> ");
-    while (now_str && ft_strncmp(now_str, limiter, ft_strlen(limiter) + 1))
-    {
-        now_str = str_plus_chr(now_str, '\n');
-        if (!now_str)
-        {
-            free(return_str);
-            printf("minishell: Out of memory");
-            return (0);
-        }
-        return_str = str_plus_str(return_str, now_str);
-        if (!return_str)
-            break ;
-        free (return_str);
-        now_str = readline("> ");
-    }
-    free (now_str);
-    return (return_str);
-    
-}
-
-int lay_out_heredoc(char *val, char **limiter)
-{
-    int fd;
-
-    fd = dup(STDIN_FILENO);
-    if (fd == -1)
-    {
-        printf("minishell: Bad file descriptor");
-        return (1);
-    }
-    free(val);
-    if (isatty(STDIN_FILENO))
-        val = heredoc_readline(*limiter);
-    else
-    {
-        printf("minishell: Bad file descriptor");
-        return (1);
-    }
-    if (errno = EBADF)
-    {
-        if (dup2(fd, STDIN_FILENO) == -1)
-        {
-            printf("minishell: Bad file descriptor");
-            return (1);
-        }
-    }
-    close(fd);
-    if (val)
-    {
-        printf("minishell: Out of memory");
-        return (1);
-    }
-}
-
-
-int    play_heredoc(char *val)
+int    play_heredoc(t_pan *current, int pcnt, int tcnt)
 {
     char    *limiter;
+    // int std_in;
 
-    if (!val)
+    // if ((std_in = dup(STDOUT_FILENO)) == -1)
+    // {
+    //     printf("minishell: Bad file descriptor");
+    //     return (1);
+    // }
+    if (!current->val)
     {
         printf("heredoc: syntax error near unexpected token `newline'");
         return (1);
 
     }
-    limiter = ft_strjoin(limiter, val);
+    limiter = ft_strdup(current->val);
     if (!limiter)
     {
         printf("heredoc: memory allocation error\n");
         return (1);
     }
-    if (lay_out_heredoc(val, &limiter))
-    {
-        free(limiter);
-        return (1);
-    }
-    free(limiter);
+    read_get_next(current, limiter, pcnt, tcnt);
+    ft_freenull(&limiter);
+    // if (dup2(std_in, STDOUT_FILENO) == -1)
+    // {
+    //     printf("minishell: Bad file descriptor");
+    //     close(std_in);
+    //     return (1);
+    // }
+    // close(std_in);
     return (0);
 }
 
+int open_temp_file(t_pan *current, int pcnt, int tcnt)
+{
+    int file;
+    char *temp;
+    char *temp2;
+    char *file_name;
+    char *i_pcnt;
+    char *i_tcnt;
+
+    i_pcnt = ft_itoa(pcnt);
+    i_tcnt = ft_itoa(tcnt);
+    temp = ft_strjoin(i_pcnt, "_");
+    temp2 = ft_strjoin(temp, i_tcnt);
+    file_name = ft_strjoin(".temp_", temp2);
+    file = open(file_name, O_RDWR | O_CREAT | O_TRUNC, 0633);
+    if (file == -1)
+        return (file);//error처리 해야합니다.
+    ft_freenull(&i_pcnt);
+    ft_freenull(&i_tcnt);
+    ft_freenull(&temp);
+    ft_freenull(&temp2);
+    ft_freenull(&current->val);
+    current->val = ft_strdup(file_name);
+    ft_freenull(&file_name);
+    return (file);
+}
+
+// int dup2_std_i(int file_fd)
+// {
+//     if (dup2(file_fd, STDOUT_FILENO) == -1)
+//     {
+//         return (-1);//error처리
+//     }
+//     return (1);
+// }
+
+void read_get_next(t_pan *current, char *str, int pcnt, int tcnt)
+{
+    char *temp;
+    int file_fd;
+
+    signal(SIGINT, signal_ctlc_heredoc);
+    file_fd = open_temp_file(current, pcnt, tcnt);
+    // dup2_std_i(file_fd);
+    while (1)
+    {
+        ft_putstr_fd("> ", 1);
+        temp = get_next_line(0);
+        ft_putstr_fd(temp, file_fd);
+        if(!ft_strncmp(temp, str, ft_strlen(str)) && temp[ft_strlen(str)] == '\n')
+        {
+            ft_freenull(&temp);
+            close(file_fd);
+            return ;
+        }
+        ft_freenull(&temp);
+    }
+}
+
+void check_heredoc(t_pcon *head)
+{
+    t_pan *current;
+    int pcnt;
+    int tcnt;
+
+    pcnt = 0;
+    tcnt = 0;
+    current = head->head;
+    while (current)
+    {
+        if (current->type == T_PIPE)
+            pcnt++;
+        if (current->type == T_REDIRECTION)
+        {
+            if (!ft_strncmp("<<", current->val, 2))
+            {
+                tcnt++;
+                play_heredoc(current->next, pcnt, tcnt);
+            }
+        }
+        current = current->next;
+    }
+}
 //ft_freenull(val);//free가 필요한지 안한지를 아직 모르겠움.

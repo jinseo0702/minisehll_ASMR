@@ -49,6 +49,7 @@ void control_cmd(t_mi *mi)
     if (check_error_case(mi) < 0)
         return ;
     check_env(mi);
+    check_heredoc(mi->head);
     // print_pcon(mi->head);
     proc_fork(mi);
 }
