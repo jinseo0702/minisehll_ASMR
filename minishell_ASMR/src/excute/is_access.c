@@ -19,11 +19,15 @@ char *return_path(t_mi *mi, char **cmd)
     char *path_real2;
     char **split;
     int idx;
+    t_node *node;
 
     idx = 0;
     if (!ft_strncmp(*cmd, "", 1))
         return (ft_strdup(*cmd));
-    split = ft_split(ft_strchr(search_node(mi->env, "PATH")->val, '/'), ':');
+    node = search_node(mi->env, "PATH");
+    if (node == NULL)
+        return (ft_strdup(*cmd));
+    split = ft_split(ft_strchr(node->val, '/'), ':');
     while (split[idx])
     {
         path_real = ft_strjoin(split[idx], "/");

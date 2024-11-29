@@ -69,6 +69,7 @@ void ft_export(t_mi *mi, char **two);
 size_t re_two_size(char **two);
 void dont_dup(t_mi *mi, char *val);
 bool is_dup(t_mi *mi, char *val);
+bool exp_grammar(char *val);
 
 //---------------------------------------------
 

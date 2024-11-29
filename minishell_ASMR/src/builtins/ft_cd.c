@@ -138,10 +138,14 @@ void ft_cd(t_mi *mi, char **two_cmd)
     char *expanded_path;
     char *tmp;
     char    *prev_dir;
+    t_node *temp;
 
     if (!two_cmd[1] || ft_strlen(two_cmd[1]) == 0) // 인자가 없는 경우
     {
-        path = ft_strdup(ft_strchr(search_node(mi->env, "HOME")->val, '=') + 1); // $HOME 환경변수 가져오기
+        temp = search_node(mi->env, "HOME");
+        if (temp == NULL)
+            return ;//error입니다.
+        path = ft_strdup(ft_strchr(temp->val, '=') + 1); // $HOME 환경변수 가져오기
         if (!path)
         {
             printf("cd: HOME not set\n");
@@ -152,7 +156,10 @@ void ft_cd(t_mi *mi, char **two_cmd)
         path = ft_strdup(two_cmd[1]); // 사용자가 입력한 경로
     if (path[0] == '~')
     {
-        home = ft_strdup(ft_strchr(search_node(mi->env, "HOME")->val, '=') + 1);
+        temp = search_node(mi->env, "HOME");
+        if (temp == NULL)
+            return ;//error입니다.
+        home = ft_strdup(ft_strchr(temp->val, '=') + 1);
         if (home)
         {
             if (path[1] == '/')

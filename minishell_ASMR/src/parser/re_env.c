@@ -99,15 +99,17 @@ char *ft_strjoin_free(char *s1, char *s2)
 char *s_env(char *str, t_mi *mi)
 {
     char *temp;
+    t_node *tmp;
 
-    if (search_node(mi->env, &str[1]) == NULL)
+    tmp = search_node(mi->env, &str[1]);
+    if (tmp == NULL)
     {
         ft_freenull(&str);
         return (NULL);
     }
-    if (ft_strchr(search_node(mi->env, &str[1])->val, '='))
+    if (ft_strchr(tmp->val, '='))
     {
-        temp = ft_strdup(ft_strchr(search_node(mi->env, &str[1])->val, '=') + 1);
+        temp = ft_strdup(ft_strchr(tmp->val, '=') + 1);
         ft_freenull(&str);
         return (temp);
     }
