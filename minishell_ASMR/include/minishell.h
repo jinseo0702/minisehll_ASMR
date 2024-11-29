@@ -55,7 +55,7 @@ t_node *new_node(char *val);
 t_con *init_env(char **envp);
 //ft_env.c
 void ft_env(t_mi *mi, char **two_cmd);//ft_env.c
-bool env_grammar(char *val);//ft_env.c
+bool env_grammar(t_mi *mi, char *val);//ft_env.c
 //control_node.c
 void insert_node(t_con *env, t_node *new, t_insert_type type);
 void remove_node(t_con *env, t_node *target);
@@ -67,6 +67,8 @@ void ft_unset(t_mi *mi, char **two);
 // void ft_export(t_con *env, char *val);
 void ft_export(t_mi *mi, char **two);
 size_t re_two_size(char **two);
+void dont_dup(t_mi *mi, char *val);
+bool is_dup(t_mi *mi, char *val);
 
 //---------------------------------------------
 
@@ -84,7 +86,7 @@ void excute_cmd(t_mi *mi, t_built_type cmd, char **two_cmd);
 void control_cmd(t_mi *mi);
 void ft_pwd(char **two_cmd);//ft_pwd.c
 // void ft_cd(const char *input);//ft_cd.c
-void ft_cd(char **two_cmd);
+void ft_cd(t_mi *mi, char **two_cmd);
 void ft_exit(t_mi *mi, char **two_cmd);//ft_exit.c
 
 //***********

@@ -46,10 +46,10 @@ void check_redi(t_mi *mi, t_pan *node)
         mi->file = open_file(node->next->val, (re = T_DGREAT));
     else if (!ft_strncmp("<<", node->val, 2))
     {
-        // re = T_DLESS;
-        // if (play_heredoc(node->next->val))
-        //     return ;
-        mi->file = open_file(node->next->val, (re = T_DLESS));
+        re = T_DLESS;
+        if (play_heredoc(node->next->val))
+            return ;
+        // mi->file = open_file(node->next->val, (re = T_DLESS));
     }
     else if (!ft_strncmp("<", node->val, 1))
         mi->file = open_file(node->next->val, (re = T_LESS));

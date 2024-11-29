@@ -1,6 +1,6 @@
 CC = clang
-#CFLAGS = -Wall -Wextra -Werror -g
-CFLAGS = -g
+# CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS = -g 
 RM = rm -rf
 
 #SRC = lab/s_fuc_indoc.c

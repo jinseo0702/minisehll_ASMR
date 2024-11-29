@@ -7,7 +7,7 @@ void free_two(char **two)
     idx = 0;
     while (two[idx])
     {
-        free(two[idx]);
+        ft_freenull(&two[idx]);
         idx++;
     }
     free(two);

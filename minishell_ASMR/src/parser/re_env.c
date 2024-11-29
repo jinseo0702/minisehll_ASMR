@@ -201,6 +201,7 @@ int check_another3(char *str)
 char *change_env(char *str, t_mi *mi)
 {
     char *temp;
+    char *temp2;
 
     if (is_quotes(*str) == '\'')
         return (ft_strtrim(str, "\'"));
@@ -209,7 +210,9 @@ char *change_env(char *str, t_mi *mi)
         if (is_quotes(*str) == '\"')
         {
            temp = ft_strtrim(str, "\"");
-           return(split_env(temp, mi));
+           temp2 = split_env(temp, mi);
+           ft_freenull(&temp);
+           return(temp2);
            
         }
         else

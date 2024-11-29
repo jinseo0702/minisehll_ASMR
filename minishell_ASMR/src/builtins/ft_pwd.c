@@ -24,7 +24,7 @@ void ft_pwd(char **two_cmd)
     idx = 0;
     if (two_cmd[++idx])
     {
-        printf("pwd don't need any option");
+        printf("pwd don't need any option \n");
         return ;
     }
 	ft_memset(buf, 0, sizeof(buf));

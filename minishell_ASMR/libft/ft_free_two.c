@@ -19,7 +19,7 @@ void ft_free_two(char **arry)
 	idx = 0;
 	while (arry[idx])
 	{
-		free(arry[idx]);
+		ft_freenull(&arry[idx]);
 		arry[idx] = NULL;
 		idx++;
 	}

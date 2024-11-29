@@ -25,7 +25,7 @@ void excute_cmd(t_mi *mi, t_built_type cmd, char **two_cmd)
     if (cmd == BUILT_ECHO)
         ft_echo(two_cmd);
     else if (cmd == BUILT_CD)
-        ft_cd(two_cmd);
+        ft_cd(mi, two_cmd);
     else if (cmd == BUILT_PWD)
         ft_pwd(two_cmd);    //여기도 옵션 처리를 위해 매개변수에 two_cmd를 넣었습니다.
     else if (cmd == BUILT_EXPORT)
@@ -49,6 +49,6 @@ void control_cmd(t_mi *mi)
     if (check_error_case(mi) < 0)
         return ;
     check_env(mi);
-    print_pcon(mi->head);
+    // print_pcon(mi->head);
     proc_fork(mi);
 }

@@ -131,7 +131,7 @@ void ft_cd(char **two_cmd)
 
 
 
-void ft_cd(char **two_cmd)
+void ft_cd(t_mi *mi, char **two_cmd)
 {
     char    *home;
     char *path;
@@ -141,7 +141,7 @@ void ft_cd(char **two_cmd)
 
     if (!two_cmd[1] || ft_strlen(two_cmd[1]) == 0) // 인자가 없는 경우
     {
-        path = getenv("HOME"); // $HOME 환경변수 가져오기
+        path = ft_strdup(ft_strchr(search_node(mi->env, "HOME")->val, '=') + 1); // $HOME 환경변수 가져오기
         if (!path)
         {
             printf("cd: HOME not set\n");
@@ -149,24 +149,26 @@ void ft_cd(char **two_cmd)
         }
     }
     else
-        path = two_cmd[1]; // 사용자가 입력한 경로
+        path = ft_strdup(two_cmd[1]); // 사용자가 입력한 경로
     if (path[0] == '~')
     {
-        home = getenv("HOME");
+        home = ft_strdup(ft_strchr(search_node(mi->env, "HOME")->val, '=') + 1);
         if (home)
         {
             if (path[1] == '/')
             {
-                tmp = path;
-                path = ft_strjoin(home, path + 1);
-                free(tmp);
+                tmp = ft_strjoin(home, &path[1]);
+                ft_freenull(&path);
+                path = ft_strdup(tmp);
+                ft_freenull(&tmp);
             }
             else if (path[1] == '\0')
             {
-                free(path);
+                ft_freenull(&path);
                 path = ft_strdup(home);
             }
         }
+        ft_freenull(&home);
     }
     prev_dir = getcwd(NULL, 0);
     if (!prev_dir)
@@ -174,26 +176,24 @@ void ft_cd(char **two_cmd)
         printf ("cd: Unable to save current directory");
         return ;
     }
-        
-    // 경로 확장
-    expanded_path = expand_env_var_with_quotes(path);
+
     // chdir 호출
-    if (chdir(expanded_path) == -1)
+    if (chdir(path) == -1)
     {
         // chdir 실패 시, errno를 활용해 에러 원인을 출력
         if (errno == ENOENT)        // 경로가 존재하지 않음
-            printf("cd: %s: No such file or directory\n", expanded_path);
+            printf("cd: %s: No such file or directory\n", path);
         else if (errno == EACCES)  // 디렉토리에 대한 권한이 없음
-            printf("cd: %s: Permission denied\n", expanded_path);
+            printf("cd: %s: Permission denied\n", path);
         else if (errno == ENOTDIR) // 경로 중 일부가 디렉토리가 아님
-            printf("cd: %s: Not a directory\n", expanded_path);
+            printf("cd: %s: Not a directory\n", path);
         else
-            printf("cd: %s: Error: %s\n", expanded_path, strerror(errno));
+            printf("cd: %s: Error: %s\n", path, strerror(errno));
         if (chdir(prev_dir) == -1)//디렉토리 복구
         printf ("cd: Failed to return to previous directory: %s\n", strerror(errno));
     }
-    free(prev_dir);
-    free(expanded_path); // 동적 메모리 해제
+    ft_freenull(&prev_dir);
+    ft_freenull(&path); // 동적 메모리 해제
 }
 
 

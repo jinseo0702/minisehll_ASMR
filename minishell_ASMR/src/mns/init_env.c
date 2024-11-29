@@ -29,8 +29,7 @@ void ft_free_env(t_con *env)
         temp = next;
         env->size--;
     }
-    env->head = NULL;
-    env->tail = NULL;
+    free(env);
 }
 
 t_node *new_node(char *val)

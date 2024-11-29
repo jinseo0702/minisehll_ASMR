@@ -173,7 +173,7 @@ void signal_handler(int signo)
             write(STDOUT_FILENO, "\n", 1);
             rl_replace_line("", 0);    // 입력된 라인 초기화
             rl_on_new_line();          // 새로운 줄 상태로 업데이트
-            rl_redisplay();            // 프롬프트 다시 표시
+            // rl_redisplay();            // 프롬프트 다시 표시
         }
     }
 }
@@ -183,7 +183,7 @@ void sigquit_handler(int signo)
     if (signo == SIGQUIT)
     {
         set_echoctl(0);
-        printf("Quit (core dumped)");
+        printf("Quit (core dumped)\n");
         rl_redisplay();
     }
 }
@@ -222,17 +222,17 @@ void	signal_ctlc_heredoc(int sig)//히어독 시그널 아직까지 안했어서
 
 void prompt(t_mi *mi)
 {
-    const char *prompt_str = "\033[32m~$ \033[0m"; // 초록색 프롬프트 설정하기
-    display_ascii();
+    // const char *prompt_str = "\033[32m~$ \033[0m"; // 초록색 프롬프트 설정하기
+   // display_ascii();
     while (1)
     {
         signal_init(); // 시그널 처리 설정
         // readline으로 사용자 입력 받기
-        if ((mi->input = readline(prompt_str)) != NULL)
+        if ((mi->input = readline("~$ ")) != NULL)
         {
             signal_turn_play();
             // 입력값이 존재하면 히스토리에 추가
-            if (*mi->input)
+            // if (*mi->input)
                 add_history(mi->input);
             rl_redisplay();
             control_cmd(mi); // 입력 명령 처리
@@ -240,6 +240,8 @@ void prompt(t_mi *mi)
         else // readline이 NULL 반환 (ctrl-D 입력 시)
         {
             ft_freenull((&mi->input));
+            ft_free_env(mi->env);
+            ft_free_env(mi->export);
             exit(0);              // 정상 종료
         }
         // 입력 처리 후 메모리 해제

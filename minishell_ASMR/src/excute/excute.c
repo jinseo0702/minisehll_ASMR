@@ -61,7 +61,9 @@ void exe_cmd(t_mi *mi)
     char **two_env;
     char **two_cmd;
     char *path;
+    int flag;
 
+    flag = 0;
     find_redi(mi);
     if (mi->head->size == 0)
         return ;
@@ -85,13 +87,28 @@ void exe_cmd(t_mi *mi)
             free_two(two_env);
             free_two(two_cmd);
             free(path);//추후 에러는 상의하자.
+            ft_free_pcon(mi->head);
+            ft_free_env(mi->env);
+            ft_free_env(mi->export);
             // printf("ERORR\n");//에러처리 어케 할래??
-            exit(errno);//이상한 명령어가 들어오면 종료를 합니다.
+            exit(127);//이상한 명령어가 들어오면 종료를 합니다.
         }
     }
     free_two(two_env);
     free_two(two_cmd);
     free(path);//추후 에러는 상의하자.
+    if (mi->dup == 1)
+    {
+        ft_free_pcon(mi->head);
+        ft_freenull((&mi->input));
+        ft_free_env(mi->env);
+        ft_free_env(mi->export);
+        if (flag < 0)
+            exit(1);
+        else
+            exit(0);
+    }
+    
 }
 
 char *real_execute(char **env, char **cmd, char *path)
@@ -193,7 +210,10 @@ void proc_fork(t_mi *mi)
                 check_pipe(mi, rf);
             mi->dup = 1;
             exe_cmd(mi);
-            exit(1);
+            ft_freenull((&mi->input));
+            ft_free_env(mi->env);
+            ft_free_env(mi->export);
+            exit(0);
         }
         else
         {

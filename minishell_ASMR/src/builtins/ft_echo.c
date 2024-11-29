@@ -39,7 +39,8 @@ void ft_echo(char **two_cmd) //input == echo -n
     while (two_cmd[idx])
     {
         printf ("%s", two_cmd[idx]);
-        printf (" ");
+        if (two_cmd[idx + 1] != NULL)
+            printf (" ");
         idx++;
     }
     if (option == E_NON)
@@ -268,123 +269,123 @@ void ft_echo(char **two_cmd) // input == echo -n
 // 	return (E_OP);
 // }
 
-int handle_single_quotes(char *str, char *result, int *i, int *res_idx)
-{
-    (*i)++; // 첫 번째 작은따옴표 건너뜀
-    while (str[*i] && str[*i] != '\'') // 작은따옴표 안의 내용 복사
-        result[(*res_idx)++] = str[(*i)++];
-    if (str[*i] == '\'') // 닫는 작은따옴표 건너뜀
-        (*i)++;
-    return (1); // 처리 완료
-}
+// int handle_single_quotes(char *str, char *result, int *i, int *res_idx)
+// {
+//     (*i)++; // 첫 번째 작은따옴표 건너뜀
+//     while (str[*i] && str[*i] != '\'') // 작은따옴표 안의 내용 복사
+//         result[(*res_idx)++] = str[(*i)++];
+//     if (str[*i] == '\'') // 닫는 작은따옴표 건너뜀
+//         (*i)++;
+//     return (1); // 처리 완료
+// }
 
-int handle_double_quotes(char *str, char *result, int *i, int *res_idx)
-{
-    int start;
-    char *env_name;
-    char *env_value;
-    int j;
+// int handle_double_quotes(char *str, char *result, int *i, int *res_idx)
+// {
+//     int start;
+//     char *env_name;
+//     char *env_value;
+//     int j;
 
-    start = 0;
-    env_name = NULL;
-    env_value = NULL;
-    j = 0;
+//     start = 0;
+//     env_name = NULL;
+//     env_value = NULL;
+//     j = 0;
 
-    (*i)++; // 첫 번째 큰따옴표 건너뜀
-    while (str[*i] && str[*i] != '"')
-    {
-        if (str[*i] == '$') // 환경 변수 확장
-        {
-            start = ++(*i);
-            while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_')) // 변수 이름 추출
-                (*i)++;
-            env_name = ft_strndup(&str[start], *i - start);
-            env_value = getenv(env_name);
-            free(env_name);
+//     (*i)++; // 첫 번째 큰따옴표 건너뜀
+//     while (str[*i] && str[*i] != '"')
+//     {
+//         if (str[*i] == '$') // 환경 변수 확장
+//         {
+//             start = ++(*i);
+//             while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_')) // 변수 이름 추출
+//                 (*i)++;
+//             env_name = ft_strndup(&str[start], *i - start);
+//             env_value = getenv(env_name);
+//             free(env_name);
 
-            if (env_value)
-            {
-                j = 0;
-                while (env_value[j])
-                    result[(*res_idx)++] = env_value[j++];
-            }
-        }
-        else // 일반 문자 복사
-        {
-            result[(*res_idx)++] = str[(*i)++];
-        }
-    }
-    if (str[*i] == '"') // 닫는 큰따옴표 건너뜀
-        (*i)++;
-    return (1); // 처리 완료
-}
+//             if (env_value)
+//             {
+//                 j = 0;
+//                 while (env_value[j])
+//                     result[(*res_idx)++] = env_value[j++];
+//             }
+//         }
+//         else // 일반 문자 복사
+//         {
+//             result[(*res_idx)++] = str[(*i)++];
+//         }
+//     }
+//     if (str[*i] == '"') // 닫는 큰따옴표 건너뜀
+//         (*i)++;
+//     return (1); // 처리 완료
+// }
 
-int handle_env_variable(char *str, char *result, int *i, int *res_idx)
-{
-    int start;
-    char *env_name;
-    char *env_value;
-    int j;
+// int handle_env_variable(char *str, char *result, int *i, int *res_idx)
+// {
+//     int start;
+//     char *env_name;
+//     char *env_value;
+//     int j;
 
-    start = 0;
-    env_name = NULL;
-    env_value = NULL;
-    j = 0;
+//     start = 0;
+//     env_name = NULL;
+//     env_value = NULL;
+//     j = 0;
 
-    if (str[*i] == '$' && str[*i + 1])
-    {
-        start = ++(*i);
-        while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_')) // 변수 이름 추출
-            (*i)++;
-        env_name = ft_strndup(&str[start], *i - start);
-        env_value = getenv(env_name);
-        free(env_name);
+//     if (str[*i] == '$' && str[*i + 1])
+//     {
+//         start = ++(*i);
+//         while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_')) // 변수 이름 추출
+//             (*i)++;
+//         env_name = ft_strndup(&str[start], *i - start);
+//         env_value = getenv(env_name);
+//         free(env_name);
 
-        if (env_value)
-        {
-            j = 0;
-            while (env_value[j])
-                result[(*res_idx)++] = env_value[j++];
-        }
-        return (1); // 처리 완료
-    }
-    return (0); // 환경 변수가 아니면 처리하지 않음
-}
+//         if (env_value)
+//         {
+//             j = 0;
+//             while (env_value[j])
+//                 result[(*res_idx)++] = env_value[j++];
+//         }
+//         return (1); // 처리 완료
+//     }
+//     return (0); // 환경 변수가 아니면 처리하지 않음
+// }
 
-char *expand_env_var_with_quotes(char *str)
-{
-    char *result;
-    int res_idx;
-    int i;
+// char *expand_env_var_with_quotes(char *str)
+// {
+//     char *result;
+//     int res_idx;
+//     int i;
 
-    result = malloc(1024); // 결과를 저장할 버퍼
-    res_idx = 0;
-    i = 0;
+//     result = malloc(1024); // 결과를 저장할 버퍼
+//     res_idx = 0;
+//     i = 0;
 
-    while (str[i])
-    {
-        if (str[i] == '\'') // 작은따옴표 처리
-        {
-            handle_single_quotes(str, result, &i, &res_idx);
-            continue;
-        }
-        if (str[i] == '"') // 큰따옴표 처리
-        {
-            handle_double_quotes(str, result, &i, &res_idx);
-            continue;
-        }
-        if (str[i] == '$') // 환경 변수 처리
-        {
-            if (handle_env_variable(str, result, &i, &res_idx))
-                continue;
-        }
-        // 일반 문자 복사
-        result[res_idx++] = str[i++];
-    }
+//     while (str[i])
+//     {
+//         if (str[i] == '\'') // 작은따옴표 처리
+//         {
+//             handle_single_quotes(str, result, &i, &res_idx);
+//             continue;
+//         }
+//         if (str[i] == '"') // 큰따옴표 처리
+//         {
+//             handle_double_quotes(str, result, &i, &res_idx);
+//             continue;
+//         }
+//         if (str[i] == '$') // 환경 변수 처리
+//         {
+//             if (handle_env_variable(str, result, &i, &res_idx))
+//                 continue;
+//         }
+//         // 일반 문자 복사
+//         result[res_idx++] = str[i++];
+//     }
 
-    result[res_idx] = '\0'; // 문자열 종료
-    return (result);
-}
+//     result[res_idx] = '\0'; // 문자열 종료
+//     return (result);
+// }
 
 // void ft_echo(char **two_cmd) // input == echo -n
 // {
