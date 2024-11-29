@@ -181,7 +181,7 @@ int not_fork(t_mi *mi)
 
 void proc_fork(t_mi *mi)
 {//<file1 cat -e | ls -al | C | D
-    int pid;
+    // int pid;
     int rf = -1;
 
     if (mi->pcnt == 0)
@@ -201,10 +201,10 @@ void proc_fork(t_mi *mi)
                 if(pipe(mi->fd) == -1)
                     exit(1);//error처리하기.
             }
-        pid = fork();
-        if (pid == -1)
+        mi->pid = fork();
+        if (mi->pid == -1)
             exit(1);//error입니다.
-        else if (pid == 0)
+        else if (mi->pid == 0)
         {//MASTER
             if (mi->pcnt > 0)
                 check_pipe(mi, rf);

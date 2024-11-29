@@ -145,21 +145,23 @@ void display_ascii(void)
     write(1, "\n", 1);
 }
 
-static void	set_echoctl(int enable)
+static void init_terminal(void)
 {
-	struct termios	termios_p;
+    struct termios term;
     
-    if (tcgetattr(STDIN_FILENO, &termios_p) != 0)
-    {
-        perror("Minishell : tcgetattr");
-        return ;
-    }
-    if (enable)
-        termios_p.c_lflag |= ECHOCTL;
-    else
-        termios_p.c_lflag &= ~ECHOCTL;
-    if (tcsetattr(STDIN_FILENO, TCSANOW, &termios_p) != 0)
-        perror("MInishell : tcgetattr");
+    tcgetattr(STDIN_FILENO, &term);
+    term.c_lflag &= ~ECHOCTL;  // Ctrl 문자 에코 비활성화
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+}
+
+// 프로그램 종료 시
+static void restore_terminal(void)
+{
+    struct termios term;
+    
+    tcgetattr(STDIN_FILENO, &term);
+    term.c_lflag |= ECHOCTL;   // 원래 상태로 복구
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
 // SIGINT 핸들러 (Ctrl-C)에 대해서 적었습니다
@@ -167,7 +169,7 @@ void signal_handler(int signo)
 {
     if (signo == SIGINT) // Ctrl-C
     {
-        set_echoctl(1);
+        init_terminal();
         if (isatty(STDIN_FILENO)) // 프롬프트 상태
         {
             write(STDOUT_FILENO, "\n", 1);
@@ -182,7 +184,7 @@ void sigquit_handler(int signo)
 {
     if (signo == SIGQUIT)
     {
-        set_echoctl(0);
+        restore_terminal();
         printf("Quit (core dumped)\n");
         rl_redisplay();
     }
@@ -190,7 +192,7 @@ void sigquit_handler(int signo)
 // 시그널 설정 하기 입니다
 void signal_init(void)
 {
-    set_echoctl(1);
+    init_terminal();
     // SIGINT 처리 (Ctrl-C)
     if (signal(SIGINT, signal_handler) == SIG_ERR)
         perror("signal error for SIGINT");
@@ -201,7 +203,7 @@ void signal_init(void)
 
 void signal_turn_play(void)
 {
-    set_echoctl(1);
+    restore_terminal();
     // SIGINT 처리 (Ctrl-C) 해주기
     if (signal(SIGINT, signal_handler) == SIG_ERR)
         perror("signal error for SIGINT");

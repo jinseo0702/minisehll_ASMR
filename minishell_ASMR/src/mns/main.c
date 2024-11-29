@@ -12,6 +12,7 @@ void init_mi(t_mi *mi, char **envp)
     ft_bzero(mi->fd, 2);//error 처리 하자...
     mi->temp_fd = 0;
     mi->dup = 0;
+    mi->pid = -100;
 }
 
 int main(int argc, char **argv, char **envp)

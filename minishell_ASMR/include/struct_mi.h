@@ -28,6 +28,7 @@ typedef struct s_mi
     int temp_fd;
     int exit_status;
     int dup;
+    int pid;
 } t_mi;
 //-----------------------------------------------------------------
 
