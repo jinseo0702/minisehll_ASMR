@@ -70,6 +70,7 @@ size_t re_two_size(char **two);
 void dont_dup(t_mi *mi, char *val);
 bool is_dup(t_mi *mi, char *val);
 bool exp_grammar(char *val);
+bool	ft_arry_grammar_check(char **arry, int idx);
 
 //---------------------------------------------
 
@@ -145,6 +146,8 @@ int handle_double_quotes(char *str, char *result, int *i, int *res_idx);
 int handle_env_variable(char *str, char *result, int *i, int *res_idx);
 char *expand_env_var_with_quotes(char *str);
 
+void	init_terminal(void);
+void	restore_terminal(void);
 void signal_handler(int signo);
 void sigquit_handler(int signo);
 void signal_init(void);
