@@ -24,7 +24,7 @@ int is_quotes(char c)
 }
 
 int check_quotes(char *str)
-{
+{//따옴표가 홀 수 일때 처리를 해야 합니다.
     char q_type;
     int idx;
 
@@ -36,7 +36,7 @@ int check_quotes(char *str)
             return (++idx);
     }
     quotes_syntax_error();
-    return (-100);
+    return (-100);//따옴추가 
 }
 
 int check_another(char *str)
@@ -104,6 +104,9 @@ int pars(t_mi *mi)
             flag = 0;
            middle = end + idx;
            flag += check_another(&mi->input[middle]);
+        //    if (flag < 0)
+        //     break;
+        //     end += flag;
         }
         else if ((flag += is_special(&mi->input[idx])))
             ;
@@ -119,4 +122,6 @@ int pars(t_mi *mi)
     }
     cnt_pipe(mi);
     return (flag);
+    // print_pcon(mi->head);
+    // printf("cnt is = %d \n", mi->pcnt);
 }

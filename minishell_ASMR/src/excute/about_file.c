@@ -60,8 +60,6 @@ void check_redi(t_mi *mi, t_pan *node)
     {
         if (mi->dup == 1)
             exit(1);
-        mi->of = -1;
-        mi->exit_status = 1;
         return ;
     }
     change_file_fd(mi, re);

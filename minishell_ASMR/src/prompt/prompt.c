@@ -11,6 +11,7 @@ static void init_terminal(void)
     tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
+// 프로그램 종료 시
 static void restore_terminal(void)
 {
     struct termios term;

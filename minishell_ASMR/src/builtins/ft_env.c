@@ -1,6 +1,18 @@
 #include "../../include/minishell.h"
 
-int ft_env(t_mi *mi, char **two_cmd)
+// void ft_env(t_con *env)
+// {
+//     t_node *current;
+
+//     current = env->head;
+//     while (current)
+//     {
+//         env_grammar(current->val);
+//         current = current->next;
+//     }
+// }
+
+void ft_env(t_mi *mi, char **two_cmd)
 {
     t_node *current;
     int     idx;
@@ -9,7 +21,7 @@ int ft_env(t_mi *mi, char **two_cmd)
     if (two_cmd[++idx])
     {
         printf("env: %s : No such file or directory", two_cmd[idx]);
-        return(-100);
+        return;
     }
     current = mi->env->head;
     while (current)
@@ -17,5 +29,4 @@ int ft_env(t_mi *mi, char **two_cmd)
         printf("%s\n", current->val);
         current = current->next;
     }
-    return (100);
 }

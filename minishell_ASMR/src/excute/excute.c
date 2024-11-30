@@ -9,7 +9,7 @@ char **merge_env(t_mi *mi)
     idx = -1;
     exe_env = (char **)malloc(sizeof(char *) * (mi->env->size + 1));
     if (exe_env == NULL)
-            exit(1);
+            exit(1);//할당실패시 어떻게 할지 고민입니다.
     current = mi->env->head;
     while (current)
     {
@@ -20,7 +20,7 @@ char **merge_env(t_mi *mi)
     return (exe_env);
 }
 
-char **merge_option(t_mi *mi)
+char **merge_option(t_mi *mi)//option 리스트로 교체할 예정 입니다.
 {
     char **exe_option;
     int idx;
@@ -31,10 +31,11 @@ char **merge_option(t_mi *mi)
     size = check_size(mi);
     exe_option = (char **)malloc(sizeof(char *) * (size + 1));
     if (exe_option == NULL)
-            exit(1);
+            exit(1);//할당실패시 어떻게 할지 고민입니다.
     current = mi->head->head;
     while (current && current->type != T_PIPE)
     {
+        // printf("size == %s \n", current->val);
         exe_option[++idx] = ft_strdup(current->val);
         remove_pan(mi->head, current);
         current = mi->head->head;
@@ -54,7 +55,7 @@ void printf_two(char **str)
     while (str[++idx])
         printf("%s \n", str[idx]);
 }
-
+/*
 void exe_cmd(t_mi *mi)
 {
     char **two_env;
@@ -64,7 +65,7 @@ void exe_cmd(t_mi *mi)
 
     flag = 0;
     find_redi(mi);
-    if (mi->head->size == 0 || mi->of < 0)
+    if (mi->head->size == 0)
         return ;
     two_env = merge_env(mi);
     two_cmd = merge_option(mi);
@@ -73,10 +74,10 @@ void exe_cmd(t_mi *mi)
     {
         free_two(two_env);
         free_two(two_cmd);
-        ft_freenull(&path);
+        free(path);//추후 에러는 상의하자. 
         return ;
     }
-    flag = excute_cmd(mi, check_builtins(two_cmd[0]), two_cmd);
+    excute_cmd(mi, check_builtins(two_cmd[0]), two_cmd);
     if (check_builtins(two_cmd[0]) == BUILT_NOT)
     {
         if (!real_execute(two_env, two_cmd, path))
@@ -85,18 +86,18 @@ void exe_cmd(t_mi *mi)
             ft_putendl_fd(" command not found", 2);
             free_two(two_env);
             free_two(two_cmd);
-            ft_freenull(&path);
+            free(path);//추후 에러는 상의하자.
             ft_free_pcon(mi->head);
             ft_free_env(mi->env);
             ft_free_env(mi->export);
-            exit(127);
+            // printf("ERORR\n");//에러처리 어케 할래??
+            strerror(errno);
+            exit(errno);//이상한 명령어가 들어오면 종료를 합니다.
         }
     }
     free_two(two_env);
     free_two(two_cmd);
-    ft_freenull(&path);
-    if (flag < 0 && mi->dup == 0)
-            mi->exit_status = 1;
+    free(path);//추후 에러는 상의하자.
     if (mi->dup == 1)
     {
         ft_free_pcon(mi->head);
@@ -113,8 +114,122 @@ void exe_cmd(t_mi *mi)
 
 char *real_execute(char **env, char **cmd, char *path)
 {
-    if (execve(path, cmd, env) == -1)
+    // ft_putstr_fd(ft_itoa(getpid()),2);
+    // write(2, "\n", 1);
+    if (execve(path, cmd, env) == -1)//두번째 인자랑 세번째 인자는 있다고 가정 합니다.
     {
+        //error처리를 해야 합니다/
+        return (NULL);
+    }
+    return (NULL);
+}
+*/
+
+void handle_execve_error(t_mi *mi, char **env, char **cmd, char *path)
+{
+    if (errno == EACCES)
+    {
+        ft_putstr_fd(cmd[0], 2);
+        ft_putendl_fd(": Permission denied\n", 2);
+        free_two(env);
+        free_two(cmd);
+        free(path);
+        ft_free_pcon(mi->head);
+        ft_free_env(mi->env);
+        ft_free_env(mi->export);
+        exit(126);
+    }
+    else if (errno == ENOENT)
+    {
+        ft_putstr_fd(cmd[0], 2);
+        ft_putendl_fd(": command not found", 2);
+        free_two(env);
+        free_two(cmd);
+        free(path);
+        ft_free_pcon(mi->head);
+        ft_free_env(mi->env);
+        ft_free_env(mi->export);
+        exit(127);
+    }
+    else if (errno == EISDIR)
+    {
+        ft_putstr_fd(cmd[0], 2);
+        ft_putendl_fd(": Is a directory\n", 2);
+        free_two(env);
+        free_two(cmd);
+        free(path);
+        ft_free_pcon(mi->head);
+        ft_free_env(mi->env);
+        ft_free_env(mi->export);
+        exit(126);
+    }
+    else
+    {
+        ft_putstr_fd(cmd[0], 2);
+        ft_putendl_fd(": Execution failed\n", 2);
+        free_two(env);
+        free_two(cmd);
+        free(path);
+        ft_free_pcon(mi->head);
+        ft_free_env(mi->env);
+        ft_free_env(mi->export);
+        exit(1); 
+    }
+}
+
+void exe_cmd(t_mi *mi)
+{
+    char **two_env;
+    char **two_cmd;
+    char *path;
+    int flag;
+
+    flag = 0;
+    find_redi(mi);
+    if (mi->head->size == 0)
+        return ;
+    two_env = merge_env(mi);
+    two_cmd = merge_option(mi);
+    path = return_path(mi, &two_cmd[0]);
+    if (!ft_strncmp(path, "", 1))
+    {
+        free_two(two_env);
+        free_two(two_cmd);
+        free(path);//추후 에러는 상의하자. 
+        return ;
+    }
+    excute_cmd(mi, check_builtins(two_cmd[0]), two_cmd);
+    if (check_builtins(two_cmd[0]) == BUILT_NOT)
+    {
+        if (!real_execute(two_env, two_cmd, path))
+        {
+            handle_execve_error(mi, two_env, two_cmd, path);
+        }
+    }
+    free_two(two_env);
+    free_two(two_cmd);
+    free(path);//추후 에러는 상의하자.
+    if (mi->dup == 1)
+    {
+        ft_free_pcon(mi->head);
+        ft_freenull((&mi->input));
+        ft_free_env(mi->env);
+        ft_free_env(mi->export);
+        if (flag < 0)
+            exit(1);
+        else
+            exit(0);
+    }
+    
+}
+
+char *real_execute(char **env, char **cmd, char *path)
+{
+    // ft_putstr_fd(ft_itoa(getpid()),2);
+    // write(2, "\n", 1);
+    if (execve(path, cmd, env) == -1)//두번째 인자랑 세번째 인자는 있다고 가정 합니다.
+    {
+        //error처리를 해야 합니다/
         return (NULL);
     }
     return (NULL);
@@ -166,21 +281,20 @@ int not_fork(t_mi *mi)
 
     std_i = dup(0);
     std_o = dup(1);
-    if (std_i == -1 || std_o == -1)
-        return (-1);
+    if (std_i == -1 || std_o == -1)//표준 입출력중 하나가 에러가 난다면?
+        return (-1);//error 처리를 해야한다.
     exe_cmd(mi);
     if (dup2(std_i, 0) == -1 || dup2(std_o, 1) == -1)
-        return (-1);
+        return (-1);//error 처리를 해야한다.
     close(std_i);
     close(std_o);
-    mi->of = 0;
     return (1);
 }
 
 void proc_fork(t_mi *mi)
-{
+{//<file1 cat -e | ls -al | C | D
+    // int pid;
     int rf = -1;
-    int last_pid;
 
     if (mi->pcnt == 0)
     {
@@ -197,17 +311,15 @@ void proc_fork(t_mi *mi)
         if (mi->pcnt > 0 && rf < mi->pcnt)
         {
             if(pipe(mi->fd) == -1)
-                exit(1);
+                exit(1);//error처리하기.
         }
         signal(SIGINT, SIG_DFL);
         signal(SIGQUIT, SIG_DFL);
         mi->pid = fork();
-        if (rf == mi->pcnt)
-            last_pid = mi->pid;
         if (mi->pid == -1)
-            exit(1);
+            exit(1);//error입니다.
         else if (mi->pid == 0)
-        {
+        {//MASTER
             if (mi->pcnt > 0)
                 check_pipe(mi, rf);
             mi->dup = 1;
@@ -228,18 +340,14 @@ void proc_fork(t_mi *mi)
     }
     int status;
     int signo = 0;
-    int wpid;
-    while ((wpid = waitpid(-1, &status, 0)) > 0)
+    while (waitpid(-1, &status, 0) > 0)
     {
-        if (wpid == last_pid)
+        if (WIFEXITED(status))
+            mi->exit_status = WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
         {
-            if (WIFEXITED(status))
-                mi->exit_status = WEXITSTATUS(status);
-            else if (WIFSIGNALED(status))
-            {
-                mi->exit_status = 128 + WTERMSIG(status);
-                signo = mi->exit_status - 128;
-            }
+            mi->exit_status = 128 + WTERMSIG(status);
+            signo = mi->exit_status - 128;
         }
     }
     if (signo == SIGINT)
@@ -255,7 +363,7 @@ void check_mpipe(t_mi *mi, int rf)
         if (rf > 0)
             close(mi->temp_fd);
         if((mi->temp_fd = dup(mi->fd[0])) == -1)
-            exit(1);
+            exit(1);//error 처리를 고민해야 합니다.
         close(mi->fd[0]);
         close(mi->fd[1]);
     }
@@ -273,7 +381,7 @@ void check_pipe(t_mi *mi, int rf)
     int err_i = 0;
     int err_o = 0;
 
-    if (rf == 0)
+    if (rf == 0)//처음일때
         err_o = dup2(mi->fd[1], STDOUT_FILENO);
     else if (rf > 0 && rf < mi->pcnt)
     {
@@ -287,7 +395,7 @@ void check_pipe(t_mi *mi, int rf)
         close(mi->temp_fd);
     }
     if (err_i == -1 || err_o == -1)
-        exit(1);
+        exit(1);//error처리해야 합니다.
     close(mi->fd[0]);
     close(mi->fd[1]);
 }

@@ -22,6 +22,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 size_t	ft_strlcat(char *dst, const char *src, size_t size);
 size_t	ft_strchr_len(const char *s, int c);
 int		ft_atoi(const char *nptr);
+long long	ft_atoi_longlong(const char *nptr);
 double	ft_atof(char *nptr);
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);

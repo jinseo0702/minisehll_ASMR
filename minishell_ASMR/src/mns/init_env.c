@@ -38,6 +38,7 @@ t_node *new_node(char *val)
     new = (t_node *)malloc(sizeof(t_node));
     if (!new)
     {
+        //error처리는 어떻게 하지 의논해야 합니다.
         printf("assignment fail!\n");
         exit(1);
     }
