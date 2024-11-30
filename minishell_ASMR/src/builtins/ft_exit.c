@@ -1,30 +1,5 @@
 #include "../../include/minishell.h"
 
-/*
-void ft_exit(t_mi *mi, char **two_cmd)
-{
-    // 사용하지 않는 매개변수 처리
-    (void)two_cmd;
-
-    // 환경 변수 해제
-    if (mi->env)
-        ft_free_con(mi->env);
-    if (mi->export)
-        ft_free_con(mi->export);
-    // 명령어 리스트 해제
-    if (mi->head)
-        ft_free_pcon(mi->head);
-
-    printf("end shell\n"); // 테스트용 출력
-    exit(0);
-}
-*/
-
-//==========================================================
-// 현재까지 exit 함수를 처리하기 위해 남은 예외상활
-//1. 파이프 상태 처리, mi에 exit_flg를 만들어서 파이프가 있는 경우 exit 명령어가 무시되도록 만드는 코드가 필요함
-//2. 할당된 메모리가 잘 해제되는지를 확인해야함.
-
 void ft_free_con(t_con *con)
 {
     t_node *temp;
@@ -42,13 +17,10 @@ void ft_free_con(t_con *con)
     con->tail = NULL;
 }
 
-// 숫자 유효성 검사 함수
 int is_valid_number(const char *str) {
     int i = 0;
-    // 음수 기호 허용
     if (str[i] == '-')
         i++;
-    // 숫자가 아니면 false
     while (str[i]) {
         if (!isdigit(str[i]))
             return 0;
@@ -74,7 +46,6 @@ void ft_exit(t_mi *mi, char **two_cmd) {
         printf("exit: %s: numeric argument required\n", two_cmd[1]);
         exit(2); // 비정상 종료
     }
-    // 여러 인자 처리
     if (two_cmd[2]) {
         printf("exit: too many arguments\n");
         return; // 종료하지 않고 명령어만 무시
@@ -94,7 +65,6 @@ void ft_exit(t_mi *mi, char **two_cmd) {
         ft_free_con(mi->export);
     if (mi->head)
         ft_free_pcon(mi->head);
-    // 종료
     printf("exit\n");
     exit(exit_code);
 }

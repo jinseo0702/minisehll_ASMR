@@ -39,12 +39,13 @@ int check_another2(char *str)
 
 void replace_env(t_pan *pars, t_mi *mi)
 {
-    t_pcon *head = malloc(sizeof(t_pcon));
-    init_pcon_pan(head, NULL, LINKED_PCON);
+    t_pcon *head;
     int idx;
     int end;
 
     idx = 0;
+    head = malloc(sizeof(t_pcon));
+    init_pcon_pan(head, NULL, LINKED_PCON);
     while (pars->val[idx])
     {
         end = 0;
@@ -61,7 +62,6 @@ void replace_env(t_pan *pars, t_mi *mi)
         insert_pan(head, new_pan(ft_substr(pars->val, idx, end)));
         idx += end;
     }
-
     ft_freenull(&(pars->val));
     pars->val = merge_word(mi, head);
     ft_free_pcon(head);
@@ -139,7 +139,7 @@ char *split_env(char *str, t_mi *mi)
            if (end == -1)
             break;
             if (end > 1)
-                temp_env = s_env(ft_substr(str, idx, end), mi);//여기서는 $를가진뭔가가 온다.
+                temp_env = s_env(ft_substr(str, idx, end), mi);
             else
                 temp_env = ft_substr(str, idx, end);
         }

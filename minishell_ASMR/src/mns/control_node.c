@@ -25,7 +25,7 @@ void insert_node(t_con *env, t_node *new, t_insert_type type)
 void remove_node(t_con *env, t_node *target)
 {
     if (target == NULL)
-        return ; //이에러 처리 즉 어떻게 할지 고민입니다.
+        return ;
     if (target->prev)
         target->prev->next = target->next;
     else
