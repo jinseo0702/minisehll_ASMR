@@ -3,13 +3,6 @@
 int    play_heredoc(t_pan *current, int pcnt, int tcnt)
 {
     char    *limiter;
-    // int std_in;
-
-    // if ((std_in = dup(STDOUT_FILENO)) == -1)
-    // {
-    //     printf("minishell: Bad file descriptor");
-    //     return (1);
-    // }
     if (!current->val)
     {
         printf("heredoc: syntax error near unexpected token `newline'");
@@ -24,13 +17,6 @@ int    play_heredoc(t_pan *current, int pcnt, int tcnt)
     }
     read_get_next(current, limiter, pcnt, tcnt);
     ft_freenull(&limiter);
-    // if (dup2(std_in, STDOUT_FILENO) == -1)
-    // {
-    //     printf("minishell: Bad file descriptor");
-    //     close(std_in);
-    //     return (1);
-    // }
-    // close(std_in);
     return (0);
 }
 
@@ -50,7 +36,7 @@ int open_temp_file(t_pan *current, int pcnt, int tcnt)
     file_name = ft_strjoin(".temp_", temp2);
     file = open(file_name, O_RDWR | O_CREAT | O_TRUNC, 0633);
     if (file == -1)
-        return (file);//error처리 해야합니다.
+        return (file);
     ft_freenull(&i_pcnt);
     ft_freenull(&i_tcnt);
     ft_freenull(&temp);
@@ -61,22 +47,12 @@ int open_temp_file(t_pan *current, int pcnt, int tcnt)
     return (file);
 }
 
-// int dup2_std_i(int file_fd)
-// {
-//     if (dup2(file_fd, STDOUT_FILENO) == -1)
-//     {
-//         return (-1);//error처리
-//     }
-//     return (1);
-// }
-
 void read_get_next(t_pan *current, char *str, int pcnt, int tcnt)
 {
     char *temp;
     int file_fd;
 
     file_fd = open_temp_file(current, pcnt, tcnt);
-    // dup2_std_i(file_fd);
     while (1)
     {
         ft_putstr_fd("> ", 1);
@@ -116,4 +92,3 @@ void check_heredoc(t_pcon *head)
         current = current->next;
     }
 }
-//ft_freenull(val);//free가 필요한지 안한지를 아직 모르겠움.

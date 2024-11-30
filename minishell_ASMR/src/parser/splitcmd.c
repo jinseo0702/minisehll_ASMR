@@ -1,6 +1,6 @@
 #include "../../include/minishell.h"
 
-void insert_pan(t_pcon *con, t_pan *new)//new타입의 node를 찾는 함수
+void insert_pan(t_pcon *con, t_pan *new)
 {
     t_pan *current;
 
@@ -16,7 +16,7 @@ void insert_pan(t_pcon *con, t_pan *new)//new타입의 node를 찾는 함수
     con->size++;
 }
 
-t_pan *search_pan(t_pcon *con, char *target)//문자열과 같은 값을 가지고 있는 node를 찾습니다.
+t_pan *search_pan(t_pcon *con, char *target)
 {
     t_pan *current;
     int len;
@@ -32,7 +32,7 @@ t_pan *search_pan(t_pcon *con, char *target)//문자열과 같은 값을 가지�
     return (NULL);
 }
 
-ssize_t re_index_pan(t_pcon *con, t_pan *target)//target_node가 몇번째에 들어 있는 지 알려줌
+ssize_t re_index_pan(t_pcon *con, t_pan *target)
 {
     size_t idx;
     t_pan *current;
@@ -49,18 +49,17 @@ ssize_t re_index_pan(t_pcon *con, t_pan *target)//target_node가 몇번째에 �
     return (-1);
 }
 
-void remove_pan(t_pcon *con, t_pan *target)//target_node를 삭제해줍니다.
+void remove_pan(t_pcon *con, t_pan *target)
 {
     int idx;
     int idx2;
     t_pan *current;
 
-    // printf("size == %s \n", con->head->val);
     idx = re_index_pan(con, target);
     idx2 = 0;
     if (target == NULL)
-        return ; //이에러 처리 즉 어떻게 할지 고민입니다.
-    if (idx == -1)//없는 경우 에러처리
+        return ;
+    if (idx == -1)
         return ;
     else if (idx == 0)
         con->head = con->head->next;
@@ -77,7 +76,7 @@ void remove_pan(t_pcon *con, t_pan *target)//target_node를 삭제해줍니다.
     con->size--;
 }
 
-void init_pcon_pan(t_pcon *env, t_pan *new, t_clear_type type)//초기화 해줍니다.
+void init_pcon_pan(t_pcon *env, t_pan *new, t_clear_type type)
 {
     if (type == LINKED_PCON)
     {
@@ -117,7 +116,6 @@ t_pan *new_pan(char *val)
     new = (t_pan *)malloc(sizeof(t_pan));
     if (!new)
     {
-        //error처리는 어떻게 하지 의논해야 합니다.
         printf("assignment fail!\n");
         exit(1);
     }
@@ -155,14 +153,3 @@ void print_pcon(t_pcon *head)
         current = current->next;
     }
 }
-
-// int main(void)
-// {
-//     t_mi mi;
-//     mi.input = readline(">? ");
-//     pars(&mi);
-//     free(mi.input);
-//     ft_free_pcon(mi.head);
-//     return (0);
-// }
-

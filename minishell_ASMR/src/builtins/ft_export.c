@@ -83,10 +83,11 @@ size_t re_two_size(char **two)
     return (siz);
 }
 
-void ft_export(t_mi *mi, char **two)//char **two_cmd
+int ft_export(t_mi *mi, char **two)
 {
     t_node *current;
     int idx = 0;
+    int flag = 100;
     
     if (re_two_size(two) == 1)
     {
@@ -96,7 +97,7 @@ void ft_export(t_mi *mi, char **two)//char **two_cmd
             printf("declare -x %s\n", current->val);
             current = current->next;
         }
-        return ;
+        return (flag);
     }
     while (two[++idx])
     {
@@ -113,7 +114,11 @@ void ft_export(t_mi *mi, char **two)//char **two_cmd
             		insert_node(mi->export, new_node(ft_strdup(two[idx])), INSERT_TAIL);
 			}
 			else
+            {
+                flag = -100;
 				printf("export: '%s':not a valid identifier\n", two[idx]);
+            }
 		}
     }
+    return (flag);
 }

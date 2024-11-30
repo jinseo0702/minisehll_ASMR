@@ -20,24 +20,28 @@ t_built_type check_builtins(const char *command)
         return (BUILT_NOT);
 }
 
-void excute_cmd(t_mi *mi, t_built_type cmd, char **two_cmd)
+int excute_cmd(t_mi *mi, t_built_type cmd, char **two_cmd)
 {
     if (cmd == BUILT_ECHO)
-        ft_echo(two_cmd);
+        return(ft_echo(two_cmd));
     else if (cmd == BUILT_CD)
-        ft_cd(mi, two_cmd);
+        return(ft_cd(mi, two_cmd));
     else if (cmd == BUILT_PWD)
-        ft_pwd(two_cmd);    //여기도 옵션 처리를 위해 매개변수에 two_cmd를 넣었습니다.
+        return(ft_pwd(two_cmd));
     else if (cmd == BUILT_EXPORT)
-        ft_export(mi, two_cmd);
+        return(ft_export(mi, two_cmd));
     else if (cmd == BUILT_UNSET)
-        ft_unset(mi, two_cmd);
+        return(ft_unset(mi, two_cmd));
     else if (cmd == BUILT_ENV)
-        ft_env(mi, two_cmd);    //옵션 처리를 해야할거 같아서 two_cmd를 넣었습니다.
+        return(ft_env(mi, two_cmd));
     else if (cmd == BUILT_EXIT)
+    {
         ft_exit(mi, two_cmd);
+        return (100);
+    }
     else if (cmd != BUILT_NOT)
-        return ;
+        return (100);
+    return (100);
 }
 
 void control_cmd(t_mi *mi)
@@ -50,6 +54,5 @@ void control_cmd(t_mi *mi)
         return ;
     check_env(mi);
     check_heredoc(mi->head);
-    // print_pcon(mi->head);
     proc_fork(mi);
 }
