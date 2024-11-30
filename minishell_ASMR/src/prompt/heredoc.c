@@ -3,6 +3,16 @@
 int    play_heredoc(t_pan *current, int pcnt, int tcnt)
 {
     char    *limiter;
+    // int std_in;
+
+    // if ((std_in = dup(STDOUT_FILENO)) == -1)
+    // {
+    //     printf("minishell: Bad file descriptor");
+    //     return (1);
+    // }
+    signal(SIGINT, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
+
     if (!current->val)
     {
         printf("heredoc: syntax error near unexpected token `newline'");
@@ -57,6 +67,13 @@ void read_get_next(t_pan *current, char *str, int pcnt, int tcnt)
     {
         ft_putstr_fd("> ", 1);
         temp = get_next_line(0);
+        if (temp == NULL)
+        {
+            ft_putstr_fd("minishell: warning: here-document at line delimited by end-of-file (wanted `eof')\n", 2);
+            ft_freenull(&temp);
+            close(file_fd);
+            return;
+        }
         ft_putstr_fd(temp, file_fd);
         if(!ft_strncmp(temp, str, ft_strlen(str)) && temp[ft_strlen(str)] == '\n')
         {
@@ -87,7 +104,7 @@ void check_heredoc(t_pcon *head)
             {
                 tcnt++;
                 play_heredoc(current->next, pcnt, tcnt);
-            }
+            }   
         }
         current = current->next;
     }

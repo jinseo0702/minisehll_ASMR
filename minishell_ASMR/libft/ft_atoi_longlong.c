@@ -1,35 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinseo <jinseo@student.42gyeongsan.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/28 23:26:03 by jinseo            #+#    #+#             */
-/*   Updated: 2024/02/28 23:31:21 by jinseo           ###   ########.fr       */
+/*   Created: 2024/02/26 14:55:42 by jinseo            #+#    #+#             */
+/*   Updated: 2024/02/29 22:27:30 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
+long long	ft_atoi_longlong(const char *nptr)
 {
-	unsigned char	*s11;
-	unsigned char	*s22;
-	size_t			cnt;
+	long long	nb;
+	int	flag;
+	long long	mi;
 
-	if (!s1 || !s2)
-		return (0);
-	s11 = (unsigned char *)s1;
-	s22 = (unsigned char *)s2;
-	cnt = 0;
-	while ((*s11 || *s22) && cnt < n)
+	nb = 0;
+	flag = 0;
+	mi = 1;
+	while ((*nptr >= 9 && *nptr <= 13) || *nptr == 32)
+		nptr++;
+	while (*nptr == '+' || *nptr == '-')
 	{
-		if (*s11 != *s22)
-			return (*s11 - *s22);
-		s22++;
-		s11++;
-		cnt++;
+		if (*nptr == '-')
+			mi *= -1;
+		nptr++;
+		flag++;
 	}
-	return (0);
+	if (flag > 1)
+		return (nb);
+	while (*nptr >= '0' && *nptr <= '9')
+	{
+		nb = (*nptr - 48) + (nb * 10);
+		nptr++;
+	}
+	return (nb * mi);
 }
