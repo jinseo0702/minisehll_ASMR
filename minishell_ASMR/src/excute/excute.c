@@ -49,6 +49,7 @@ char **merge_option(t_mi *mi)//option 리스트로 교체할 예정 입니다.
     return (exe_option);
 }
 
+
 void printf_two(char **str)
 {
     int idx = -1;
