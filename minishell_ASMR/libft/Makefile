@@ -7,6 +7,7 @@ SRCS = ft_isalnum.c \
 	ft_isalpha.c \
 	ft_isascii.c \
 	ft_atoi.c \
+	ft_atoi_longlong.c \
 	ft_atof.c \
 	ft_bzero.c \
 	ft_isprint.c \
