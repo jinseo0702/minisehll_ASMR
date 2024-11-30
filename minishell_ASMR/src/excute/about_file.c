@@ -45,10 +45,7 @@ void check_redi(t_mi *mi, t_pan *node)
     if (!ft_strncmp(">>", node->val, 2))
         mi->file = open_file(node->next->val, (re = T_DGREAT));
     else if (!ft_strncmp("<<", node->val, 2))
-    {
         mi->file = open_file(node->next->val, (re = T_DLESS));
-        unlink(node->next->val);
-    }
     else if (!ft_strncmp("<", node->val, 1))
         mi->file = open_file(node->next->val, (re = T_LESS));
     else if (!ft_strncmp(">", node->val, 1))
@@ -78,7 +75,10 @@ int open_file(char *file, T_RDT re)
     else if (re == T_DGREAT)
         fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
     else if (re == T_DLESS)
+    {
         fd = open(file, O_RDONLY, 0644);
+        unlink(file);
+    }
     if (fd == -1)
         perror(file);
     return (fd);
