@@ -18,6 +18,8 @@ src/builtins/ft_check_builtins.c \
 src/excute/about_file.c \
 src/excute/excute.c \
 src/excute/is_access.c \
+src/excute/exe_cmd.c \
+src/excute/proc_fork.c \
 src/prompt/prompt.c \
 src/prompt/heredoc.c \
 src/parser/split_pipe.c \

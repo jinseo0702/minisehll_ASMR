@@ -45,3 +45,60 @@ char *return_path(t_mi *mi, char **cmd)
     free_two(split);
     return (ft_strdup(*cmd));
 }
+
+char **merge_env(t_mi *mi)
+{
+    char **exe_env;
+    int idx;
+    t_node *current;
+
+    idx = -1;
+    exe_env = (char **)malloc(sizeof(char *) * (mi->env->size + 1));
+    if (exe_env == NULL)
+            exit(1);
+    current = mi->env->head;
+    while (current)
+    {
+        exe_env[++idx] = ft_strdup(current->val);
+        current = current->next;
+    }
+    exe_env[mi->env->size] = NULL;
+    return (exe_env);
+}
+
+char **merge_option(t_mi *mi)
+{
+    char **exe_option;
+    int idx;
+    int size;
+    t_pan *current;
+
+    idx = -1;
+    size = check_size(mi);
+    exe_option = (char **)malloc(sizeof(char *) * (size + 1));
+    if (exe_option == NULL)
+            exit(1);
+    current = mi->head->head;
+    while (current && current->type != T_PIPE)
+    {
+        exe_option[++idx] = ft_strdup(current->val);
+        remove_pan(mi->head, current);
+        current = mi->head->head;
+    }
+    if (current && current->type == T_PIPE)
+    {
+        remove_pan(mi->head, current);
+        mi->pcnt--;
+    }
+    exe_option[size] = NULL;
+    return (exe_option);
+}
+
+char *real_execute(char **env, char **cmd, char *path)
+{
+    if (execve(path, cmd, env) == -1)
+    {
+        return (NULL);
+    }
+    return (NULL);
+}

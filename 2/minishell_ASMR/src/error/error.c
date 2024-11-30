@@ -48,3 +48,14 @@ int check_error_case(t_mi *mi)
     }
     return (1);
 }
+
+void execve_error_handle(t_mi *mi, char **env, char **cmd, char *path)
+{
+    ft_putstr_fd(cmd[0], 2);
+    free_two(env);
+    free_two(cmd);
+    ft_freenull(&path);
+    ft_free_pcon(mi->head);
+    ft_free_env(mi->env);
+    ft_free_env(mi->export);
+}

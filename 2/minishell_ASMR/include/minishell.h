@@ -120,6 +120,7 @@ int not_fork(t_mi *mi);
 void delete_node(t_mi *mi);
 void check_pipe(t_mi *mi, int rf);
 void check_mpipe(t_mi *mi, int rf);
+void handle_execve_error(t_mi *mi, char **env, char **cmd, char *path);
 // int open_file(char *file, T_RDT re);
 //---------------------------------------------
 
@@ -167,5 +168,6 @@ void quotes_syntax_error(void);
 void re_syntax_error(char *s);
 void another_syntax_error(char *str);
 int check_error_case(t_mi *mi);
+void execve_error_handle(t_mi *mi, char **env, char **cmd, char *path);
 //---------------------------------------------
 # endif
