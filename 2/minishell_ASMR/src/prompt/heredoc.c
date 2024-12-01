@@ -101,28 +101,3 @@ void	read_get_next(t_pan *current, char *str, int pcnt, int tcnt)
 		ft_freenull(&temp);
 	}
 }
-
-void	check_heredoc(t_pcon *head)
-{
-	t_pan	*current;
-	int		pcnt;
-	int		tcnt;
-
-	pcnt = 0;
-	tcnt = 0;
-	current = head->head;
-	while (current)
-	{
-		if (current->type == T_PIPE)
-			pcnt++;
-		if (current->type == T_REDIRECTION)
-		{
-			if (!ft_strncmp("<<", current->val, 2))
-			{
-				tcnt++;
-				play_heredoc(current->next, pcnt, tcnt);
-			}
-		}
-		current = current->next;
-	}
-}

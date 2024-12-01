@@ -6,17 +6,17 @@
 /*   By: jinseo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:35:50 by jinseo            #+#    #+#             */
-/*   Updated: 2024/11/12 17:36:35 by jinseo           ###   ########.fr       */
+/*   Updated: 2024/12/01 10:01:06 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void ft_freenull(char **str)
+void	ft_freenull(char **str)
 {
-    if (str && *str)
-    {
-        free(*str);
-        *str = NULL;
-    }
+	if (str && *str)
+	{
+		free(*str);
+		*str = NULL;
+	}
 }

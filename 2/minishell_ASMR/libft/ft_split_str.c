@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   ft_split_str.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jinseo <jinseo@student.42gyeongsan.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 17:50:58 by jinseo            #+#    #+#             */
-/*   Updated: 2024/03/29 15:10:28 by jinseo           ###   ########.fr       */
+/*   Updated: 2024/12/01 10:02:56 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ static int	ft_wordcount(char const *s, char *c)
 	i = 0;
 	while (s[i] != '\0')
 	{
-		if ((i == 0 && !ft_strchr(c, s[i])) || (i != 0 && !ft_strchr(c, s[i]) && ft_strchr(c, s[i - 1])))
+		if ((i == 0 && !ft_strchr(c, s[i])) || (i != 0 && \
+					!ft_strchr(c, s[i]) && ft_strchr(c, s[i - 1])))
 			cnt++;
 		i++;
 	}
@@ -90,7 +91,8 @@ char	**ft_split_str(char const *s, char *c)
 		return (NULL);
 	while (s[i])
 	{
-		if ((i == 0 && !ft_strchr(c, s[i])) || (!ft_strchr(c, s[i]) && ft_strchr(c, s[i - 1]) && i != 0))
+		if ((i == 0 && !ft_strchr(c, s[i])) || \
+				(!ft_strchr(c, s[i]) && ft_strchr(c, s[i - 1]) && i != 0))
 		{
 			str[stri] = ft_save(&s[i], c);
 			if (str[stri] == NULL)

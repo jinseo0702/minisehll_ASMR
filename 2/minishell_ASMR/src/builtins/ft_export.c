@@ -6,7 +6,7 @@
 /*   By: hyunahn <hyunahn@student.42gyeongsan.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 04:55:44 by hyunahn           #+#    #+#             */
-/*   Updated: 2024/12/01 05:30:53 by hyunahn          ###   ########.fr       */
+/*   Updated: 2024/12/01 08:11:51 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ bool	ft_arry_grammar_check(char **arry, int idx)
 		}
 		idx++;
 	}
-    ft_free_two(arry);
+	ft_free_two(arry);
 	return (true);
 }
 
@@ -87,68 +87,9 @@ bool	env_grammar(t_mi *mi, char *val)
 		}
 		dont_dup(mi, arry[0]);
 		if (ft_arry_grammar_check(arry, idx) == false)
-            return (false);
-        else
-            return (true);
+			return (false);
+		else
+			return (true);
 	}
 	return (false);
-}
-
-size_t	re_two_size(char **two)
-{
-	size_t	siz;
-
-	siz = 0;
-	while (two[siz])
-		siz++;
-	return (siz);
-}
-
-int	ft_play_export(t_mi *mi, char **two, int idx, int flag)
-{
-	while (two[++idx])
-	{
-		if (env_grammar(mi, two[idx]))
-		{
-			insert_node(mi->env, new_node(ft_strdup(two[idx])), INSERT_TAIL);
-			insert_node(mi->export, new_node(ft_strdup(two[idx])), INSERT_TAIL);
-		}
-		else
-		{
-			if (exp_grammar(two[idx]))
-			{
-				if (is_dup(mi, &two[idx][0]))
-					insert_node(mi->export, new_node(ft_strdup(two[idx])), \
-							INSERT_TAIL);
-			}
-			else
-			{
-				flag = -100;
-				printf("export: '%s':not a valid identifier\n", two[idx]);
-			}
-		}
-	}
-	return (flag);
-}
-
-int	ft_export(t_mi *mi, char **two)
-{
-	t_node	*current;
-	int		idx;
-	int		flag;
-
-	idx = 0;
-	flag = 100;
-	if (re_two_size(two) == 1)
-	{
-		current = mi->export->head;
-		while (current)
-		{
-			printf("declare -x %s\n", current->val);
-			current = current->next;
-		}
-		return (flag);
-	}
-	flag = ft_play_export(mi, two, idx, flag);
-	return (flag);
 }

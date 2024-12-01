@@ -6,14 +6,14 @@
 /*   By: hyunahn <hyunahn@student.42gyeongsan.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 06:30:21 by hyunahn           #+#    #+#             */
-/*   Updated: 2024/12/01 07:05:06 by hyunahn          ###   ########.fr       */
+/*   Updated: 2024/12/01 09:18:28 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static int process_input_segment(t_mi *mi, int *idx, int *flag, int *end);
-static int handle_parsing(t_mi *mi);
+static int	process_input_segment(t_mi *mi, int *idx, int *flag, int *end);
+static int	handle_parsing(t_mi *mi);
 
 int	is_special(char *s)
 {
@@ -91,113 +91,4 @@ void	cnt_pipe(t_mi *mi)
 			mi->pcnt++;
 		current = current->next;
 	}
-}
-
-// int	pars(t_mi *mi)
-// {
-// 	int	idx;
-// 	int	middle;
-// 	int	end;
-// 	int	flag;
-
-// 	mi->head = malloc(sizeof(t_pcon));
-// 	init_pcon_pan(mi->head, NULL, LINKED_PCON);
-// 	idx = 0;
-// 	while (mi->input[idx])
-// 	{
-// 		end = 0;
-// 		flag = 0;
-// 		if (ft_isspace(mi->input[idx]))
-// 		{
-// 			idx++;
-// 			continue ;
-// 		}
-// 		else if (is_quotes(mi->input[idx]))
-// 		{
-// 			flag = check_quotes(&mi->input[idx]);
-// 			if (flag < 0)
-// 				break ;
-// 			end += flag;
-// 			flag = 0;
-// 			middle = end + idx;
-// 			flag += check_another(&mi->input[middle]);
-// 		}
-// 		else if ((flag += is_special(&mi->input[idx])))
-// 			;
-// 		else
-// 		{
-// 			flag += check_another(&mi->input[idx]);
-// 		}
-// 		if (flag < 0)
-// 			break;
-// 		end += flag;
-// 		insert_pan(mi->head, new_pan(ft_substr(mi->input, idx, end)));
-// 		idx += end;
-// 	}
-// 	cnt_pipe(mi);
-// 	return (flag);
-// }
-
-// 새로운 보조 함수 선언
-
-int pars(t_mi *mi)
-{
-    mi->head = malloc(sizeof(t_pcon));
-    init_pcon_pan(mi->head, NULL, LINKED_PCON);
-
-    int flag = handle_parsing(mi);
-
-    cnt_pipe(mi);
-    return (flag);
-}
-
-static int handle_parsing(t_mi *mi)
-{
-    int idx = 0;
-    int flag = 0;
-    int end = 0;
-
-    while (mi->input[idx])
-    {
-        if (ft_isspace(mi->input[idx]))
-        {
-            idx++;
-            continue;
-        }
-
-        flag = process_input_segment(mi, &idx, &flag, &end);
-        if (flag < 0)
-            break;
-
-        idx += end;
-    }
-
-    return flag;
-}
-
-static int process_input_segment(t_mi *mi, int *idx, int *flag, int *end)
-{
-    *flag = 0;
-    *end = 0;
-
-    if (is_quotes(mi->input[*idx]))
-    {
-        *flag = check_quotes(&mi->input[*idx]);
-        if (*flag < 0)
-            return *flag;
-        *end += *flag;
-        int middle = *end + *idx;
-        *flag = check_another(&mi->input[middle]);
-    }
-    else if ((*flag += is_special(&mi->input[*idx])))
-		;
-    else
-    {
-        *flag += check_another(&mi->input[*idx]);
-    }
-    if (*flag < 0)
-        return *flag;
-    *end += *flag;
-    insert_pan(mi->head, new_pan(ft_substr(mi->input, *idx, *end)));
-    return *flag;
 }

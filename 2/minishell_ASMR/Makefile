@@ -15,16 +15,20 @@ src/builtins/ft_export.c \
 src/builtins/ft_exit.c \
 src/builtins/ft_echo.c \
 src/builtins/ft_check_builtins.c \
+src/builtins/ft_export_utils.c \
 src/excute/about_file.c \
 src/excute/excute.c \
 src/excute/is_access.c \
 src/excute/exe_cmd.c \
 src/excute/proc_fork.c \
+src/excute/execute_utils.c \
 src/prompt/prompt.c \
 src/prompt/heredoc.c \
 src/parser/split_pipe.c \
 src/parser/splitcmd.c \
 src/parser/re_env.c \
+src/parser/re_env_utils.c \
+src/parser/re_env_utils2.c \
 src/error/error.c \
 src/prompt/signal.c
 
