@@ -6,7 +6,7 @@
 /*   By: hyunahn <hyunahn@student.42gyeongsan.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/01 04:57:21 by hyunahn           #+#    #+#             */
-/*   Updated: 2024/12/01 05:26:46 by hyunahn          ###   ########.fr       */
+/*   Updated: 2025/11/25 17:11:37 by jinseo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	is_valid_identifier(const char *str)
 
 int	ft_unset(t_mi *mi, char **two)
 {
-	static int	idx;
+	int	idx = 0;
 
 	if (!two || !two[1])
 	{
